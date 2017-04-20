@@ -1,0 +1,25 @@
+<a class="navbar-brand" href="#">Disorderly Labs</a>
+<a href="#research">Research</a>
+<a href="#projects">Projects</a>
+<a href="#publications">Publications</a>
+<a href="#talks">Talks</a>
+<a href="#team">Team</a>
+<a href="#press"> Press </a>
+<a href="#contact">Contact Us</a>
+<a href="#" class="list-group-item">Lineage-driven Fault Injection (LDFI)</a>
+<a href="#" class="list-group-item">Disorderly Programming</a>
+<a href="#" class="list-group-item">Programmable Storage</a>
+<a href="http://bloom-lang.net/">Bloom</a>
+<a href="http://programmability.us/">Programmable storage</a>
+<a href="https://people.ucsc.edu/~palvaro/socc16.pdf">Automating Failure Testing Research at Internet Scale (ACM SoCC 2016)</a>
+<a href="https://people.ucsc.edu/~palvaro/molly.pdf">Lineage-driven Fault Injection (ACM SIGMOD 2015)</a>
+<a href="https://www2.eecs.berkeley.edu/Pubs/TechRpts/2009/EECS-2009-173.html">Dedalus: Datalog in Time and Space (Datalog 2010)</a>
+<a target="_blank" href="https://www.infoq.com/presentations/failure-test-research-netflix">Monkeys in labcoats</a>
+<a href="http://disorderlyprogramming.org">Peter Alvaro</a>
+<a href="https://sites.google.com/site/researchkamala/">Kamala</a>
+<a href="https://users.soe.ucsc.edu/~kdahlgren/">Kathryn</a>
+<a href="http://ashutoshraina.github.io">Read more about Ashutosh.</a>
+<a href="https://people.ucsc.edu/~sborland/">Sarah</a>
+<a href="http://db.cs.berkeley.edu/jmh/">Joseph M. Hellerstein</a>
+<a target="_blank" href="http://www.theregister.co.uk/2016/02/01/netflix_tries_molly_in_quest_for_enhanced_fault_finding_perception/">The Register</a>
+<a target="_blank" href="http://techblog.netflix.com/2016/01/automated-failure-testing.html">Netflix Tech Blog</a>
