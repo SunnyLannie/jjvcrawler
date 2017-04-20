@@ -39,10 +39,13 @@ public class Jjvcrawler {
 //            HttpStatus.SC_OK, "OK");
       CloseableHttpResponse response;
       
+      /*** output file name ***/
+      String filename = "attr.nana";
+      
       try {
          /*** writer for dl'ed page to file ***/
          BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-               new FileOutputStream("attr.txt"), "UTF-8"));
+               new FileOutputStream(filename), "UTF-8"));
          
          /*** process response ***/
          response = httpclient.execute(httpget);
