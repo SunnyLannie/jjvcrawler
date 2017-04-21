@@ -6,6 +6,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
@@ -40,7 +41,7 @@ public class Jjvcrawler {
       CloseableHttpResponse response;
       
       /*** output file name ***/
-      String filename = "attr.nana";
+      String filename = "unwrap.nana";
       
       try {
          /*** writer for dl'ed page to file ***/
@@ -63,10 +64,17 @@ public class Jjvcrawler {
             
             
             /*** Writing html elements to file ***/
-            
-            writer.write(links.outerHtml());
-//            writer.write(links.attr("href"));
+            links.unwrap();
+//            Element e = links.last();
+//            writer.write(e.toString());
+            for(Element link : links){
+               writer.write(link.attr("abs:href") + '\n');
+//               System.out.println(link);
+            }
+
             writer.close();
+//            links.remove();
+//            System.out.println(doc);
                         
             /*** reading the content ***/
             
