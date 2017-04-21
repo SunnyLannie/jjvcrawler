@@ -35,9 +35,6 @@ public class Jjvcrawler {
 //      String test = "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
       String test = "https://disorderlylabs.github.io/";
       HttpGet httpget = new HttpGet(test);
-//      HttpGet httpget = new HttpGet("https://www.example.com");
-//      HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1,
-//            HttpStatus.SC_OK, "OK");
       CloseableHttpResponse response;
       
       /*** output file name ***/
@@ -59,37 +56,15 @@ public class Jjvcrawler {
             /*** extract html elements that contain the <a> tag with href attribute ***/
             Elements links = doc.select("a[href]");
             
-//            String readline;
-//            System.out.println(links.outerHtml());
-            
-            
-            /*** Writing html elements to file ***/
+            /*** Extract links from html to file ***/
             links.unwrap();
-//            Element e = links.last();
-//            writer.write(e.toString());
             for(Element link : links){
                writer.write(link.attr("abs:href") + '\n');
-//               System.out.println(link);
             }
 
+            instream.close();
             writer.close();
-//            links.remove();
-//            System.out.println(doc);
                         
-            /*** reading the content ***/
-            
-          /*  BufferedReader br = new BufferedReader(new InputStreamReader(instream));
-            try{
-               
-               int i = 0;
-               while( ((readline = br.readLine()) != null) ) {
-                  writer.write(readline);
-                  writer.newLine();
-               }
-            } finally {
-               instream.close();
-               writer.close();
-            } */
          }
          response.close();
       } catch (IOException e) {
