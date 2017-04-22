@@ -18,6 +18,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,52 +30,89 @@ import org.apache.http.HttpVersion;
 
 public class Jjvcrawler {
 
-   public static void main(String[] args) {
-      
-      /*** Send GET request ***/
-      CloseableHttpClient httpclient = HttpClients.createDefault();
-//      String test = "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
-      String test = "https://disorderlylabs.github.io/";
-      HttpGet httpget = new HttpGet(test);
-      CloseableHttpResponse response;
-      
-      /*** output file name ***/
-      String filename = "unwrap.nana";
-      
-      try {
-         /*** writer for dl'ed page to file ***/
-         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-               new FileOutputStream(filename), "UTF-8"));
-         
-         /*** process response ***/
-         response = httpclient.execute(httpget);
-         HttpEntity entity = response.getEntity();
-         if (entity != null) {
-            /*** extract page content ***/
-            InputStream instream = entity.getContent();
-            Document doc = Jsoup.parse(instream, "UTF-8", test);
-            
-            /*** extract html elements that contain the <a> tag with href attribute ***/
-            Elements links = doc.select("a[href]");
-            
-            /*** Extract links from html to file ***/
-            links.unwrap();
-            for(Element link : links){
-               writer.write(link.attr("abs:href") + '\n');
-            }
+	public static void main(String[] args) {
 
-            instream.close();
-            writer.close();
-                        
-         }
-         response.close();
-      } catch (IOException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-     
-         
-   }
-      
+		/*** Send GET request ***/
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		// String test =
+		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
+		String test = "https://disorderlylabs.github.io/";
+		int numToSearch = 50;
+
+		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		CloseableHttpResponse response;
+
+		/*** output file name ***/
+		String filename = "unwrap.nana";
+		Hashtable<String, String> searched = new Hashtable(); // used to store
+																// things we
+																// looked at
+																// already
+		ArrayList<String> toSearch = new ArrayList<String>();// what we are
+																// trying to
+																// search
+		toSearch.add(test);
+
+		while (!toSearch.isEmpty() && searched.size() < numToSearch) {
+			if (searched.contains(toSearch.get(0))) {
+				toSearch.remove(0); // we already searched this one, throw it
+									// out
+				continue;
+			}
+			
+			HttpGet httpget = new HttpGet(toSearch.get(0));
+
+			System.out.println("searched size is: " + searched.size());
+
+			try {
+				/*** writer for dl'ed page to file ***/
+				BufferedWriter writer = new BufferedWriter(
+						new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
+
+				/*** process response ***/
+				response = httpclient.execute(httpget);
+				HttpEntity entity = response.getEntity();
+				if (entity != null) {
+					/*** extract page content ***/
+					InputStream instream = entity.getContent();
+					Document doc = Jsoup.parse(instream, "UTF-8", test);
+
+					/***
+					 * extract html elements that contain the <a> tag with href
+					 * attribute
+					 ***/
+					Elements links = doc.select("a[href]");
+
+					/*** Extract links from html to file ***/
+					links.unwrap();
+					for (Element link : links) {
+						writer.write(link.attr("abs:href") + '\n');
+						// System.out.println(link.attr("abs:href"));
+						//searched.put(link.attr("abs:href"), link.attr("abs:href"));
+						toSearch.add(link.attr("abs:href"));
+					}
+					searched.put(toSearch.get(0),toSearch.get(0));
+					toSearch.remove(0);// we are now done searching for this so
+										// remove
+					System.out.println(toSearch);
+					instream.close();
+
+				}
+				response.close();
+				writer.close();
+
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+
+			}
+
+		}
+		System.out.println(searched);
+		System.out.println("\ndone");
+		System.out.println("we found " + searched.size() + " sites");
+
+	}
+
 }
-
