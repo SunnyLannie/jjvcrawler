@@ -1,3 +1,6 @@
 # Output file
 
 *.nana
+
+# compilation artifacts
+*.class
