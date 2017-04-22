@@ -37,7 +37,7 @@ public class Jjvcrawler {
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
-		int numToSearch = 30;
+		int numToSearch = 3;
 
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		CloseableHttpResponse response;
@@ -52,7 +52,11 @@ public class Jjvcrawler {
 																// trying to
 																// search
 		toSearch.add(test);
-
+/*		
+crawler crawl=new crawler();
+System.out.println(crawl.crawl(test));
+System.exit(0);
+*/
 		while (!toSearch.isEmpty() && searched.size() < numToSearch) {
 			if (searched.contains(toSearch.get(0))) {
 				toSearch.remove(0); // we already searched this one, throw it
