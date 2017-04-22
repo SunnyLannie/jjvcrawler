@@ -37,7 +37,7 @@ public class Jjvcrawler {
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
-		int numToSearch = 50;
+		int numToSearch = 30;
 
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		CloseableHttpResponse response;
@@ -87,14 +87,12 @@ public class Jjvcrawler {
 					links.unwrap();
 					for (Element link : links) {
 						writer.write(link.attr("abs:href") + '\n');
-						// System.out.println(link.attr("abs:href"));
-						//searched.put(link.attr("abs:href"), link.attr("abs:href"));
 						toSearch.add(link.attr("abs:href"));
 					}
 					searched.put(toSearch.get(0),toSearch.get(0));
 					toSearch.remove(0);// we are now done searching for this so
 										// remove
-					System.out.println(toSearch);
+					//System.out.println(toSearch);
 					instream.close();
 
 				}
@@ -109,7 +107,10 @@ public class Jjvcrawler {
 			}
 
 		}
-		System.out.println(searched);
+		//System.out.println(searched);
+		for( String key : searched.keySet() ) {
+		    System.out.println(key);
+		}
 		System.out.println("\ndone");
 		System.out.println("we found " + searched.size() + " sites");
 
