@@ -1,9 +1,15 @@
 package com.usamin.nana.extractor;
 
+import java.util.HashMap;
+import java.util.PriorityQueue;
+
 public class Extractor {
 
+   PriorityQueue<String> urls; // priority of links found in this domain
+   
    public Extractor() {
-      // TODO Auto-generated constructor stub
+      urls = new PriorityQueue<String>();
    }
+   
 
 }

@@ -9,6 +9,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.usamin.nana.extractor.DomainCrawler;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;
@@ -18,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -32,91 +35,21 @@ public class Jjvcrawler {
 
 	public static void main(String[] args) {
 
-		/*** Send GET request ***/
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
-		int numToSearch = 3;
-
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
-		CloseableHttpResponse response;
 
 		/*** output file name ***/
 		String filename = "unwrap.nana";
-		Hashtable<String, String> searched = new Hashtable(); // used to store
-																// things we
-																// looked at
-																// already
-		ArrayList<String> toSearch = new ArrayList<String>();// what we are
-																// trying to
-																// search
-		toSearch.add(test);
-/*		
-crawler crawl=new crawler();
-System.out.println(crawl.crawl(test));
-System.exit(0);
-*/
-		while (!toSearch.isEmpty() && searched.size() < numToSearch) {
-			if (searched.contains(toSearch.get(0))) {
-				toSearch.remove(0); // we already searched this one, throw it
-									// out
-				continue;
-			}
-			
-			HttpGet httpget = new HttpGet(toSearch.get(0));
 
-			System.out.println("searched size is: " + searched.size());
-
-			try {
-				/*** writer for dl'ed page to file ***/
-				BufferedWriter writer = new BufferedWriter(
-						new OutputStreamWriter(new FileOutputStream(filename), "UTF-8"));
-
-				/*** process response ***/
-				response = httpclient.execute(httpget);
-				HttpEntity entity = response.getEntity();
-				if (entity != null) {
-					/*** extract page content ***/
-					InputStream instream = entity.getContent();
-					Document doc = Jsoup.parse(instream, "UTF-8", test);
-
-					/***
-					 * extract html elements that contain the <a> tag with href
-					 * attribute
-					 ***/
-					Elements links = doc.select("a[href]");
-
-					/*** Extract links from html to file ***/
-					links.unwrap();
-					for (Element link : links) {
-						writer.write(link.attr("abs:href") + '\n');
-						toSearch.add(link.attr("abs:href"));
-					}
-					searched.put(toSearch.get(0),toSearch.get(0));
-					toSearch.remove(0);// we are now done searching for this so
-										// remove
-					//System.out.println(toSearch);
-					instream.close();
-
-				}
-				response.close();
-				writer.close();
-
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} finally {
-
-			}
-
-		}
-		//System.out.println(searched);
-		for( String key : searched.keySet() ) {
-		    System.out.println(key);
-		}
-		System.out.println("\ndone");
-		System.out.println("we found " + searched.size() + " sites");
+      try {
+         DomainCrawler d = new DomainCrawler(test);
+         d.crawl();
+      } catch (URISyntaxException e) {
+         e.printStackTrace();
+      }
 
 	}
 
