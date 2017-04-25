@@ -42,6 +42,7 @@ public class Jjvcrawler {
       } catch (URISyntaxException e) {
          e.printStackTrace();
       }
+		
 	}
 
 }
