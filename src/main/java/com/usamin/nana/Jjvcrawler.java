@@ -11,18 +11,8 @@ import org.jsoup.select.Elements;
 
 import com.usamin.nana.extractor.DomainCrawler;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Hashtable;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -44,13 +34,14 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 
-      try {
-         DomainCrawler d = new DomainCrawler(test);
-         d.crawl();
+		try {
+         URI uri = new URI(test);
+         String hostname = uri.getHost();
+         DomainCrawler dc = new DomainCrawler(hostname, test);
+         dc.crawl();
       } catch (URISyntaxException e) {
          e.printStackTrace();
       }
-
 	}
 
 }

@@ -25,9 +25,15 @@ public class DomainCrawler {
    float k; // politeness factor
    Duration dl; // duration of the last download from this domain
    
-   public DomainCrawler(String url) throws URISyntaxException {
-      URI uri = new URI(url);
-      hostname = uri.getHost();
+   public DomainCrawler(String hostname) {
+      this.hostname = hostname;
+      undiscovered = new LinkedList<String>();
+      
+      k = 10;
+   }
+   
+   public DomainCrawler(String hostname, String url) {
+      this.hostname = hostname;
       
       undiscovered = new LinkedList<String>();
       undiscovered.add(url);
@@ -53,8 +59,9 @@ public class DomainCrawler {
          /*** process response ***/
          response = httpclient.execute(httpget);
          HttpEntity entity = response.getEntity();
+
+         /*** extract page content ***/
          if (entity != null){
-            /*** extract page content ***/
             InputStream instream = entity.getContent();
             Document doc = Jsoup.parse(instream, "utf-8", url);
             /***
@@ -63,7 +70,7 @@ public class DomainCrawler {
              ***/
             Elements links = doc.select("a[href]");
 
-            /*** Extract links from html and store undiscovered links***/
+            /*** Extract and store undiscovered links***/
             for (Element link : links) {
                result.add(link.attr("abs:href"));
             }
