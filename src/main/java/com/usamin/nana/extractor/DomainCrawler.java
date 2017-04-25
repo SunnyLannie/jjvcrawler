@@ -36,12 +36,18 @@ public class DomainCrawler {
    }
    
    public LinkedList<String> crawl(){
+      
+      /** remove url from FIFO queue */
       String url = undiscovered.poll();
+      
+      /** initializing httpclient components */
       CloseableHttpClient httpclient = HttpClients.createDefault();
       CloseableHttpResponse response;
+      HttpGet httpget = new HttpGet(url);
+      
+      /** list to store undiscovered urls on this page*/
       LinkedList<String> result = new LinkedList<String>();
       
-      HttpGet httpget = new HttpGet(url);
       try {
          
          /*** process response ***/
