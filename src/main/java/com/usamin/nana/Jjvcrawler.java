@@ -13,6 +13,7 @@ import com.usamin.nana.extractor.DomainCrawler;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -30,6 +31,8 @@ public class Jjvcrawler {
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		HashMap<String, DomainCrawler> map = 
+		      new HashMap<String, DomainCrawler>();
 
 		/*** output file name ***/
 		String filename = "unwrap.nana";
@@ -42,7 +45,6 @@ public class Jjvcrawler {
       } catch (URISyntaxException e) {
          e.printStackTrace();
       }
-		
 	}
 
 }

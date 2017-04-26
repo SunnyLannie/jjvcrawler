@@ -41,6 +41,7 @@ public class DomainCrawler {
       k = 10;
    }
    
+   
    public LinkedList<String> crawl(){
       
       /** remove url from FIFO queue */
@@ -83,12 +84,12 @@ public class DomainCrawler {
          e.printStackTrace();
       }
       
-      System.out.println(result);
-      
       return result;
       
    }
    
-   
+   public void addURL(String url) {
+      undiscovered.add(url);
+   }
 
 }
