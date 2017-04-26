@@ -33,7 +33,7 @@ public class Jjvcrawler {
 
 		/*** output file name ***/
 		String filename = "unwrap.nana";
-
+        test="http://www.example.com/";
 		try {
          URI uri = new URI(test);
          String hostname = uri.getHost();
@@ -42,6 +42,7 @@ public class Jjvcrawler {
       } catch (URISyntaxException e) {
          e.printStackTrace();
       }
+		System.out.println("done");
 		
 	}
 
