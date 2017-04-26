@@ -102,5 +102,9 @@ public class DomainCrawler {
 		return result;
 
 	}
+	
+	public void addURL(String url) {
+      undiscovered.add(url);
+   }
 
 }
