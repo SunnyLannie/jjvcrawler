@@ -14,6 +14,8 @@ import com.usamin.nana.extractor.DomainCrawler;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -33,18 +35,40 @@ public class Jjvcrawler {
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
+		PriorityQueue<String> frontier = new PriorityQueue<String> ();
 
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 
-		try {
-         URI uri = new URI(test);
-         String hostname = uri.getHost();
-         DomainCrawler dc = new DomainCrawler(hostname, test);
-         dc.crawl();
+		String seed = getHostname(test);
+		
+		DomainCrawler seedDomain = new DomainCrawler(seed, test);
+		map.put(seed, seedDomain);
+		LinkedList<String> links = seedDomain.crawl();
+      
+      for(String link: links) {
+         String hostname = getHostname(link);
+         if(!map.containsKey(hostname)) {
+            DomainCrawler crawler = new DomainCrawler(hostname, link);
+            map.put(hostname, crawler);
+         } else {
+            DomainCrawler crawler = map.get(hostname);
+            crawler.addURL(link);
+         }
+         
+      }
+      System.out.println(map.keySet());
+	}
+	
+	static String getHostname(String url) {
+	   URI uri = null;
+      try {
+         uri = new URI(url);
       } catch (URISyntaxException e) {
          e.printStackTrace();
       }
+	   String hostname = uri.getHost();
+	   return hostname;
 	}
 
 }
