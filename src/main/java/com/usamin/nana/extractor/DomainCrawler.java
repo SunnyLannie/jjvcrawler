@@ -95,9 +95,9 @@ public class DomainCrawler {
 			e.printStackTrace();
 		}
 
-		System.out.println(result);
+		//System.out.println(result);
 		dl = System.currentTimeMillis() - startTime;
-		System.out.println("time in miliseconds is: " + dl);
+		//System.out.println("time in miliseconds is: " + dl);
 
 		return result;
 
