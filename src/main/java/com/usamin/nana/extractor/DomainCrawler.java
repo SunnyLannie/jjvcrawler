@@ -28,16 +28,8 @@ public class DomainCrawler {
 	Instant prevFinished;
 	Duration dlDuration;
 
-	public DomainCrawler(String hostname) {
-		this.hostname = hostname;
-		undiscovered = new LinkedList<String>();
-		
-		resetTime();
-		dlDuration = Duration.ZERO;
-	}
-
-	public DomainCrawler(String hostname, String url) {
-		this.hostname = hostname;
+	public DomainCrawler(String url) {
+		this.hostname = getHost(url);
 
 		undiscovered = new LinkedList<String>();
 		undiscovered.add(url);
@@ -46,25 +38,19 @@ public class DomainCrawler {
 		dlDuration = Duration.ZERO;
 	}
 	
-	public void resetTime() {
-	   startNext = Instant.now();
-      prevFinished = Instant.now();
+	public String getHostname() {
+	   return this.hostname;
 	}
 	
-	private void timeout() {
-	   Instant currentTime = Instant.now();
-      if(startNext.isAfter(currentTime)){
-         try {
-            Duration wait = Duration.between(currentTime, startNext);
-            Thread.sleep(wait.toMillis());
-         } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-         }
-      }
-	   
-	}
-
+	public void resetTime() {
+      startNext = Instant.now();
+      prevFinished = Instant.now();
+   }
+	
+   public void addURL(String url) {
+      undiscovered.add(removeSpace(url));
+   }
+   
 	public LinkedList<String> crawl() {
 	   
 	   timeout();
@@ -113,7 +99,7 @@ public class DomainCrawler {
 		
 		prevFinished = Instant.now();
 		dlDuration = Duration.between(startNext, prevFinished);
-		startNext = Instant.now().plus( dlDuration.multipliedBy(k) );
+		startNext = prevFinished.plus( dlDuration.multipliedBy(k) );
 		
 
 		//System.out.println(result);
@@ -124,8 +110,34 @@ public class DomainCrawler {
 
 	}
 	
-	public void addURL(String url) {
-      undiscovered.add(url);
+	private String removeSpace(String url) {
+	   return url.replaceAll(" ", "%20");
+	}
+	
+	private String getHost(String url) {
+	   removeSpace(url);
+      URI uri = null;
+      try {
+         uri = new URI(url);
+      } catch (URISyntaxException e) {
+         e.printStackTrace();
+      }
+      String hostname = uri.getHost();
+      return hostname;
+   }
+   
+   private void timeout() {
+      Instant currentTime = Instant.now();
+      if(startNext.isAfter(currentTime)){
+         try {
+            Duration wait = Duration.between(currentTime, startNext);
+            Thread.sleep(wait.toMillis());
+         } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         }
+      }
+      
    }
 
 }
