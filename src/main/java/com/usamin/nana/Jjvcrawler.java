@@ -32,6 +32,7 @@ public class Jjvcrawler {
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
+		test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
@@ -61,6 +62,7 @@ public class Jjvcrawler {
 	}
 	
 	static String getHostname(String url) {
+	   url=url.replaceAll(" ", "%20");
 	   URI uri = null;
       try {
          uri = new URI(url);
