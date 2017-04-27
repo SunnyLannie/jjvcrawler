@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -23,11 +24,16 @@ public class DomainCrawler {
 	String hostname;
 	LinkedList<String> undiscovered;
 	long k=50; // politeness factor
-	long dl = 0; // duration of the last download from this domain. initially 0
+	Instant startNext;
+	Instant prevFinished;
+	Duration dlDuration;
 
 	public DomainCrawler(String hostname) {
 		this.hostname = hostname;
 		undiscovered = new LinkedList<String>();
+		
+		resetTime();
+		dlDuration = Duration.ZERO;
 	}
 
 	public DomainCrawler(String hostname, String url) {
@@ -35,14 +41,35 @@ public class DomainCrawler {
 
 		undiscovered = new LinkedList<String>();
 		undiscovered.add(url);
+		
+		resetTime();
+		dlDuration = Duration.ZERO;
 	}
 	
+	public void resetTime() {
+	   startNext = Instant.now();
+      prevFinished = Instant.now();
+	}
 	
-	public long getCurrentPoliteness(){
-		return dl;
+	private void timeout() {
+	   Instant currentTime = Instant.now();
+      if(startNext.isAfter(currentTime)){
+         try {
+            Duration wait = Duration.between(currentTime, startNext);
+            Thread.sleep(wait.toMillis());
+         } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         }
+      }
+	   
 	}
 
 	public LinkedList<String> crawl() {
+	   
+	   timeout();
+	   resetTime();
+	   
 		/** remove url from FIFO queue */
 		String url = undiscovered.poll();
 
@@ -54,17 +81,6 @@ public class DomainCrawler {
 
 		/** list to store undiscovered urls on this page */
 		LinkedList<String> result = new LinkedList<String>();
-		
-		//to avoid dos server, need to wait for a time. 
-		//politeness factor*duration of last download+processing
-		try {
-			Thread.sleep(dl*k);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		final long startTime = System.currentTimeMillis();
 
 		try {
 
@@ -94,9 +110,14 @@ public class DomainCrawler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		prevFinished = Instant.now();
+		dlDuration = Duration.between(startNext, prevFinished);
+		startNext = Instant.now().plus( dlDuration.multipliedBy(k) );
+		
 
 		//System.out.println(result);
-		dl = System.currentTimeMillis() - startTime;
+		//dl = System.currentTimeMillis() - startTime;
 		//System.out.println("time in miliseconds is: " + dl);
 
 		return result;
