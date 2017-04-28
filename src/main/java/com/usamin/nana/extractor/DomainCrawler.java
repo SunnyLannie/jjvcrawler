@@ -19,14 +19,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class DomainCrawler {
+public class DomainCrawler implements Comparable<DomainCrawler>{
 
 	String hostname;
-	LinkedList<String> undiscovered;
+	LinkedList<String> undiscovered; // FIFO queue of the pages to crawl on this domain
 	long k=50; // politeness factor
-	Instant startNext;
-	Instant prevFinished;
-	Duration dlDuration;
+	Instant startNext; // start time of the next url download for this domain
+	Instant prevFinished; // time when the last download on this domain was finished
+	Duration dlDuration; // duration of the last download
 
 	public DomainCrawler(String url) {
 		this.hostname = getHost(url);
@@ -38,6 +38,13 @@ public class DomainCrawler {
 		dlDuration = Duration.ZERO;
 	}
 	
+	public DomainCrawler() {
+	   undiscovered = new LinkedList<String>();
+      
+      resetTime();
+      dlDuration = Duration.ZERO;
+	}
+	
 	public String getHostname() {
 	   return this.hostname;
 	}
@@ -47,10 +54,20 @@ public class DomainCrawler {
       prevFinished = Instant.now();
    }
 	
+	/*** add url to FIFO queue, discard if it is not from the same domain
+	 * initialize hostname if isn't already initialized **/
    public void addURL(String url) {
-      undiscovered.add(removeSpace(url));
+      if(this.hostname != null) {
+         if(getHost(url) != this.hostname) return;
+         undiscovered.add(removeSpace(url));
+      } else {
+         this.hostname = getHost(url);
+         undiscovered.add(url);
+      }
+      
    }
    
+   /** remove first element from FIFO queue and extract links found */
 	public LinkedList<String> crawl() {
 	   
 	   timeout();
@@ -126,6 +143,7 @@ public class DomainCrawler {
       return hostname;
    }
    
+	/** check and enforce politeness */
    private void timeout() {
       Instant currentTime = Instant.now();
       if(startNext.isAfter(currentTime)){
@@ -138,6 +156,11 @@ public class DomainCrawler {
          }
       }
       
+   }
+
+   @Override
+   public int compareTo(DomainCrawler other) {
+      return this.startNext.compareTo(other.startNext);
    }
 
 }
