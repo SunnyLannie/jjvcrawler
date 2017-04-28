@@ -19,25 +19,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class DomainCrawler {
+public class DomainCrawler implements Comparable<DomainCrawler>{
 
 	String hostname;
-	LinkedList<String> undiscovered;
+	LinkedList<String> undiscovered; // FIFO queue of the pages to crawl on this domain
 	long k=50; // politeness factor
-	Instant startNext;
-	Instant prevFinished;
-	Duration dlDuration;
+	Instant startNext; // start time of the next url download for this domain
+	Instant prevFinished; // time when the last download on this domain was finished
+	Duration dlDuration; // duration of the last download
 
-	public DomainCrawler(String hostname) {
-		this.hostname = hostname;
-		undiscovered = new LinkedList<String>();
-		
-		resetTime();
-		dlDuration = Duration.ZERO;
-	}
-
-	public DomainCrawler(String hostname, String url) {
-		this.hostname = hostname;
+	public DomainCrawler(String url) {
+		this.hostname = getHost(url);
 
 		undiscovered = new LinkedList<String>();
 		undiscovered.add(url);
@@ -46,25 +38,36 @@ public class DomainCrawler {
 		dlDuration = Duration.ZERO;
 	}
 	
-	public void resetTime() {
-	   startNext = Instant.now();
-      prevFinished = Instant.now();
+	public DomainCrawler() {
+	   undiscovered = new LinkedList<String>();
+      
+      resetTime();
+      dlDuration = Duration.ZERO;
 	}
 	
-	private void timeout() {
-	   Instant currentTime = Instant.now();
-      if(startNext.isAfter(currentTime)){
-         try {
-            Duration wait = Duration.between(currentTime, startNext);
-            Thread.sleep(wait.toMillis());
-         } catch (InterruptedException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-         }
-      }
-	   
+	public String getHostname() {
+	   return this.hostname;
 	}
-
+	
+	public void resetTime() {
+      startNext = Instant.now();
+      prevFinished = Instant.now();
+   }
+	
+	/*** add url to FIFO queue, discard if it is not from the same domain
+	 * initialize hostname if isn't already initialized **/
+   public void addURL(String url) {
+      if(this.hostname != null) {
+         if(getHost(url) != this.hostname) return;
+         undiscovered.add(removeSpace(url));
+      } else {
+         this.hostname = getHost(url);
+         undiscovered.add(url);
+      }
+      
+   }
+   
+   /** remove first element from FIFO queue and extract links found */
 	public LinkedList<String> crawl() {
 	   
 	   timeout();
@@ -113,7 +116,7 @@ public class DomainCrawler {
 		
 		prevFinished = Instant.now();
 		dlDuration = Duration.between(startNext, prevFinished);
-		startNext = Instant.now().plus( dlDuration.multipliedBy(k) );
+		startNext = prevFinished.plus( dlDuration.multipliedBy(k) );
 		
 
 		//System.out.println(result);
@@ -124,8 +127,40 @@ public class DomainCrawler {
 
 	}
 	
-	public void addURL(String url) {
-      undiscovered.add(url);
+	private String removeSpace(String url) {
+	   return url.replaceAll(" ", "%20");
+	}
+	
+	private String getHost(String url) {
+	   removeSpace(url);
+      URI uri = null;
+      try {
+         uri = new URI(url);
+      } catch (URISyntaxException e) {
+         e.printStackTrace();
+      }
+      String hostname = uri.getHost();
+      return hostname;
+   }
+   
+	/** check and enforce politeness */
+   private void timeout() {
+      Instant currentTime = Instant.now();
+      if(startNext.isAfter(currentTime)){
+         try {
+            Duration wait = Duration.between(currentTime, startNext);
+            Thread.sleep(wait.toMillis());
+         } catch (InterruptedException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+         }
+      }
+      
+   }
+
+   @Override
+   public int compareTo(DomainCrawler other) {
+      return this.startNext.compareTo(other.startNext);
    }
 
 }

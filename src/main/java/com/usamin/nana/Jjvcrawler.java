@@ -40,7 +40,9 @@ public class Jjvcrawler {
 
 		/*** output file name ***/
 		String filename = "unwrap.nana";
+		
 
+		/*
 		String seed = getHostname(test);
 		
 		DomainCrawler seedDomain = new DomainCrawler(seed, test);
@@ -58,19 +60,8 @@ public class Jjvcrawler {
          }
          
       }
-      System.out.println(map.keySet());
+      System.out.println(map.keySet());*/
 	}
 	
-	static String getHostname(String url) {
-	   url=url.replaceAll(" ", "%20");
-	   URI uri = null;
-      try {
-         uri = new URI(url);
-      } catch (URISyntaxException e) {
-         e.printStackTrace();
-      }
-	   String hostname = uri.getHost();
-	   return hostname;
-	}
 
 }
