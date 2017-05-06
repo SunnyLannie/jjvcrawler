@@ -1,6 +1,5 @@
 package com.usamin.nana;
 
-import org.apache.http.client.*;
 import org.apache.http.client.methods.*;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -14,8 +13,10 @@ import com.usamin.nana.extractor.DomainCrawler;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,8 +48,14 @@ public class Jjvcrawler {
 		DomainCrawler seedDomain = new DomainCrawler(test);
 		map.put("hi", seedDomain);
 		LinkedList<String> links = seedDomain.crawl();
- 
-        System.out.println(links);
+		Set<String> s = new LinkedHashSet<>(links);
+
+        System.out.println(s);
+        seedDomain.addURL(links.get(10));
+        System.out.println(seedDomain.crawl());
+        
+        
+        
 	}
 	
 

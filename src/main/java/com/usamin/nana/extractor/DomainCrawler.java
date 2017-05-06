@@ -58,7 +58,7 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 	 * initialize hostname if isn't already initialized **/
    public void addURL(String url) {
       if(this.hostname != null) {
-         if(getHost(url) != this.hostname) return;
+         if(!getHost(url).equals(this.hostname)) return;
          undiscovered.add(removeSpace(url));
       } else {
          this.hostname = getHost(url);
@@ -79,7 +79,7 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 		/** initializing httpclient components */
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response;
-
+        System.out.println("url is" +url);
 		HttpGet httpget = new HttpGet(url);
 
 		/** list to store undiscovered urls on this page */
@@ -145,7 +145,9 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
    
 	/** check and enforce politeness */
    private void timeout() {
+	  System.err.print("start timeout: ");
       Instant currentTime = Instant.now();
+	  System.err.println(Duration.between(currentTime, startNext));
       if(startNext.isAfter(currentTime)){
          try {
             Duration wait = Duration.between(currentTime, startNext);
@@ -155,6 +157,8 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
             e1.printStackTrace();
          }
       }
+	   System.err.println("end timeout");
+
       
    }
 
