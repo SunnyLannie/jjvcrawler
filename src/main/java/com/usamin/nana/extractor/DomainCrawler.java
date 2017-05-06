@@ -132,7 +132,7 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 	}
 	
 	private String getHost(String url) {
-	   removeSpace(url);
+	  url=removeSpace(url);
       URI uri = null;
       try {
          uri = new URI(url);

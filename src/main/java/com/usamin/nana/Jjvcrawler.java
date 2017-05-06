@@ -42,25 +42,13 @@ public class Jjvcrawler {
 		String filename = "unwrap.nana";
 		
 
-		/*
-		String seed = getHostname(test);
 		
-		DomainCrawler seedDomain = new DomainCrawler(seed, test);
-		map.put(seed, seedDomain);
+		
+		DomainCrawler seedDomain = new DomainCrawler(test);
+		map.put("hi", seedDomain);
 		LinkedList<String> links = seedDomain.crawl();
-      
-      for(String link: links) {
-         String hostname = getHostname(link);
-         if(!map.containsKey(hostname)) {
-            DomainCrawler crawler = new DomainCrawler(hostname, link);
-            map.put(hostname, crawler);
-         } else {
-            DomainCrawler crawler = map.get(hostname);
-            crawler.addURL(link);
-         }
-         
-      }
-      System.out.println(map.keySet());*/
+ 
+        System.out.println(links);
 	}
 	
 
