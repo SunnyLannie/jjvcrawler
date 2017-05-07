@@ -33,7 +33,7 @@ public class Jjvcrawler {
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
-		test="https://www.equestriadaily.com";
+		//test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
@@ -51,7 +51,7 @@ public class Jjvcrawler {
 		Set<String> s = new LinkedHashSet<>(links);
 
         System.out.println(s);
-        seedDomain.addURL(links.get(10));
+        seedDomain.addURL(links.get(2));
         System.out.println(seedDomain.crawl());
         
         
