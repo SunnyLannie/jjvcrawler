@@ -36,6 +36,7 @@ public class Jjvcrawler {
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
 		test="https://www.equestriadaily.com";
+		//test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
@@ -47,6 +48,14 @@ public class Jjvcrawler {
 		DomainCrawler dc = new DomainCrawler(reddit);
 		
 		
+/*		DomainCrawler seedDomain = new DomainCrawler(test);
+		map.put("hi", seedDomain);
+		LinkedList<String> links = seedDomain.crawl();
+		Set<String> s = new LinkedHashSet<>(links);
+
+        System.out.println(s);
+        seedDomain.addURL(links.get(2));
+        System.out.println(seedDomain.crawl());*/
 
 	}
 	

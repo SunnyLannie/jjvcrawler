@@ -24,7 +24,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class CrawlExclusion {
+public class CrawlExclusion extends CrawlerUniversal {
 
    String hostname;
    Instant expiration;

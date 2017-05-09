@@ -19,7 +19,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class DomainCrawler implements Comparable<DomainCrawler>{
+
+public class DomainCrawler extends CrawlerUniversal implements Comparable<DomainCrawler> {
 
 	String hostname;
 	LinkedList<String> undiscovered; // FIFO queue of the pages to crawl on this domain
@@ -83,7 +84,7 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 		/** initializing httpclient components */
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response;
-        System.out.println("url is" +url);
+        System.err.println("url is" +url);
 		HttpGet httpget = new HttpGet(url);
 
 		/** list to store undiscovered urls on this page */
@@ -123,29 +124,15 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 		startNext = prevFinished.plus( dlDuration.multipliedBy(k) );
 		
 
-		//System.out.println(result);
+		//System.err.println(result);
 		//dl = System.currentTimeMillis() - startTime;
-		//System.out.println("time in miliseconds is: " + dl);
+		//System.err.println("time in milliseconds is: " + dl);
 
 		return result;
 
 	}
 	
-	private String removeSpace(String url) {
-	   return url.replaceAll(" ", "%20");
-	}
-	
-	private String getHost(String url) {
-	  url=removeSpace(url);
-      URI uri = null;
-      try {
-         uri = new URI(url);
-      } catch (URISyntaxException e) {
-         e.printStackTrace();
-      }
-      String hostname = uri.getHost();
-      return hostname;
-   }
+
    
 	/** check and enforce politeness */
    private void timeout() {

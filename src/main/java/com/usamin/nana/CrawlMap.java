@@ -5,17 +5,18 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 
+import com.usamin.nana.extractor.CrawlerUniversal;
 import com.usamin.nana.extractor.DomainCrawler;
 
-public class CrawlMap extends HashMap<String, DomainCrawler>{
+public class CrawlMap extends HashMap<String, DomainCrawler> {
 
    /** Priority queue, sort crawler threads by the earliest time
     * that they can politely execute the next request
     */
    PriorityBlockingQueue<DomainCrawler> frontier;
-   
    public CrawlMap() {
       super();
+      
       frontier = new PriorityBlockingQueue<DomainCrawler>();
    }
    
@@ -34,7 +35,7 @@ public class CrawlMap extends HashMap<String, DomainCrawler>{
     * insert crawler to priority queue
     */
    public void exploreFrontier(String url) {
-      String hostname = getHost(url);
+      String hostname = DomainCrawler.getHost(url);
       if(!this.containsKey(hostname)) {
          DomainCrawler crawler = new DomainCrawler(url);
          this.put(hostname, crawler);
@@ -47,20 +48,5 @@ public class CrawlMap extends HashMap<String, DomainCrawler>{
    }
    
    
-   private String removeSpace(String url) {
-      return url.replaceAll(" ", "%20");
-   }
-   
-   private String getHost(String url) {
-      url=removeSpace(url);
-      URI uri = null;
-      try {
-         uri = new URI(url);
-      } catch (URISyntaxException e) {
-         e.printStackTrace();
-      }
-      String hostname = uri.getHost();
-      return hostname;
-   }
    
 }
