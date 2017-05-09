@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -26,15 +28,25 @@ public class CrawlExclusion {
 
    String hostname;
    Instant expiration;
-   List<String> disallow;
-   List<String> allow;
+   HashSet<String> disallow;
+   HashSet<String> allow;
    
    public CrawlExclusion() {
+      disallow = new HashSet<String>();
+      allow = new HashSet<String>();
+   }
    
+   private void allow(String path) {
+      allow.add(path);
+   }
+   
+   private void disallow(String path) {
+      disallow.add(path);
    }
    
    public static CrawlExclusion getExclusions(String url) {
       CrawlExclusion ex = new CrawlExclusion();
+      
       url.replaceAll(" ", "%20");
       URI uri = null;
       try {
@@ -44,7 +56,7 @@ public class CrawlExclusion {
       }
       ex.hostname = uri.getHost();
       System.out.println(ex.hostname);
-      String robotsDotTxt = ex.hostname + "/robots.txt";
+      String robotsDotTxt = "https://" + ex.hostname + "/robots.txt";
       
       /** initializing httpclient components */
       CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -66,31 +78,48 @@ public class CrawlExclusion {
             
             String line;
             boolean hasRules = false;
-            String regex_path = "[ ]*([\\/]?[\\w]*)*$"; //([\\s]*#+[\\w]*)*
-            Pattern getPath = Pattern.compile(regex_path, Pattern.CASE_INSENSITIVE);
-            String regex_allAgent = "[\\s]*[*]";
-            Pattern getAllAgent = Pattern.compile(regex_allAgent, Pattern.CASE_INSENSITIVE);
             
-            /* DO NOT TOUCH THIS
+            String regex_keyword = "[\\s]*([\\w-?]+)[\\s]*:[\\s]*"; // group1
+            String regex_allAgents = "([*])|([\\w]+)"; //group2-3
+            String regex_path = "((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*)";        //"([\\/]?[\\w]*)*"; //([\\s]*#+[\\w]*)*
+
+            // "[\\s]*([\\w-?]+)[\\s]*:[\\s]*(([*])|([\\w]+)|((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*))"
+            String regex_entry = regex_keyword + "(" +
+                                 regex_allAgents + "|" +
+                                 regex_path + ")";
+            Pattern entry = Pattern.compile(regex_entry);
             
             while( (line = reader.readLine()) != null ) {
                
-               line.toLowerCase();
-               if(hasRules) {
-                  if( line.matches("allow:[.]*") ){
-                     
-                     Matcher matcher = p.matcher(line);
-                     if(matcher.matches()){
-                        System.out.println(matcher.group(1));
+               Matcher entryMatch = entry.matcher(line);
+               if(entryMatch.matches()){
+                  String keyword = entryMatch.group(1).toLowerCase();
+                  String path = null;
+                  switch (keyword) {
+                  case "user-agent":
+                     if(entryMatch.group(3) != null) hasRules = true;
+                     else hasRules = false;
+                     break;
+                  case "allow":
+                     if(!hasRules) break;
+                     path = entryMatch.group(5);
+                     if(path != null && hasRules){
+                        ex.allow(path);
                      }
+                     break;
+                  case "disallow":
+                     if(!hasRules) break;
+                     path = entryMatch.group(5);
+                     if(path != null && hasRules){
+                        ex.disallow(path);
+                     }
+                     break;
+                  default:
+                     break;
                   }
-               } else if(hasRules && line.matches("user-agent:[\\s]*[\\w]+")) {
-                  hasRules = false;
-               } else if(!hasRules && line.matches("user-agent:[\\s]*[*]")) {
-                  hasRules = true;
                }
-               
-            }*/
+
+            }
             
             instream.close();
          }
@@ -102,6 +131,23 @@ public class CrawlExclusion {
       }
       
       return ex;
+   }
+   
+   public String toString() {
+      String robotstxt = "";
+      String newline = System.getProperty("line.separator");
+      
+      robotstxt = robotstxt + "Disallow:" + newline;
+      for(Iterator<String> it = disallow.iterator(); it.hasNext();) {
+         robotstxt = robotstxt + it.next() + newline;
+      }
+      
+      robotstxt = robotstxt + "Allow:" + newline;
+      for(Iterator<String> it = allow.iterator(); it.hasNext();) {
+         robotstxt = robotstxt + it.next() + newline;
+      }
+      
+      return robotstxt;
    }
    
 

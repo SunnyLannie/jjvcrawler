@@ -33,6 +33,8 @@ public class Jjvcrawler {
 		// String test =
 		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		String test = "https://disorderlylabs.github.io/";
+		String reddit = "https://www.reddit.com/";
+		String facebook = "https://www.facebook.com";
 		test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
@@ -42,20 +44,10 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 		
-
+		DomainCrawler dc = new DomainCrawler(reddit);
 		
 		
-		DomainCrawler seedDomain = new DomainCrawler(test);
-		map.put("hi", seedDomain);
-		LinkedList<String> links = seedDomain.crawl();
-		Set<String> s = new LinkedHashSet<>(links);
 
-        System.out.println(s);
-        seedDomain.addURL(links.get(10));
-        System.out.println(seedDomain.crawl());
-        
-        
-        
 	}
 	
 

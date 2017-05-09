@@ -27,15 +27,19 @@ public class DomainCrawler implements Comparable<DomainCrawler>{
 	Instant startNext; // start time of the next url download for this domain
 	Instant prevFinished; // time when the last download on this domain was finished
 	Duration dlDuration; // duration of the last download
+	CrawlExclusion robotstxt;
 
 	public DomainCrawler(String url) {
 		this.hostname = getHost(url);
+		
 
 		undiscovered = new LinkedList<String>();
 		undiscovered.add(url);
 		
 		resetTime();
 		dlDuration = Duration.ZERO;
+		robotstxt = CrawlExclusion.getExclusions(url);
+		System.out.println(robotstxt);
 	}
 	
 	public DomainCrawler() {
