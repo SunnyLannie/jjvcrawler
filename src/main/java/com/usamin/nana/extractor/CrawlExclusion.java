@@ -47,14 +47,7 @@ public class CrawlExclusion extends CrawlerUniversal {
    public static CrawlExclusion getExclusions(String url) {
       CrawlExclusion ex = new CrawlExclusion();
       
-      url.replaceAll(" ", "%20");
-      URI uri = null;
-      try {
-         uri = new URI(url);
-      } catch (URISyntaxException e) {
-         e.printStackTrace();
-      }
-      ex.hostname = uri.getHost();
+      ex.hostname = getHost(url);
       System.out.println(ex.hostname);
       String robotsDotTxt = "https://" + ex.hostname + "/robots.txt";
       

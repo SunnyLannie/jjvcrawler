@@ -23,6 +23,6 @@ public class CrawlerUniversal {
       }
       String hostname = uri.getHost();
       return hostname;
-}
+   }
 
 }
