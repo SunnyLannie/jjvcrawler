@@ -22,7 +22,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
-
+//This is main
 /*** process that downloads and parse webpage for hyperlinks ***/
 
 public class Jjvcrawler {
@@ -36,7 +36,8 @@ public class Jjvcrawler {
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
 		test="https://www.equestriadaily.com";
-		//test="https://www.equestriadaily.com";
+		String test2="https://www.macrumors.com/";
+		test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
@@ -45,8 +46,8 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 		
-		DomainCrawler dc = new DomainCrawler(reddit);
-		
+		DomainCrawler dc = new DomainCrawler(facebook);
+		System.out.println(dc.crawl());
 		
 /*		DomainCrawler seedDomain = new DomainCrawler(test);
 		map.put("hi", seedDomain);

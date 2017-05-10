@@ -3,6 +3,7 @@ package com.usamin.nana;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+//commonly used functions are placed in this file to allow code reuse
 public class util {
 	public String removeSpace(String url) {
 		   return url.replaceAll(" ", "%20");

@@ -19,7 +19,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
+//this crawls a domain, it first looks at that domains robot file
+//it also accounts for politeness factor to avoid spamming server with too many requests
 public class DomainCrawler extends CrawlerUniversal implements Comparable<DomainCrawler> {
 
 	String hostname;
@@ -78,17 +79,23 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 	   timeout();
 	   resetTime();
 	   
-		/** remove url from FIFO queue */
-		String url = undiscovered.poll();
+		/** list to store undiscovered urls on this page */
+		LinkedList<String> result = new LinkedList<String>();
 
+		/** remove url from FIFO queue
+		 * If FIFO is empty, just return nothing  */
+        String url=null;
+		url = undiscovered.poll();
+		if(url==null){
+		   return result;
+		}
+	   
 		/** initializing httpclient components */
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response;
         System.err.println("url is" +url);
 		HttpGet httpget = new HttpGet(url);
 
-		/** list to store undiscovered urls on this page */
-		LinkedList<String> result = new LinkedList<String>();
 
 		try {
 
@@ -134,7 +141,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 	
 
    
-	/** check and enforce politeness */
+	/** check and enforce politeness by sleeping the thread for the necessary duration */
    private void timeout() {
 	  System.err.print("start timeout: ");
       Instant currentTime = Instant.now();

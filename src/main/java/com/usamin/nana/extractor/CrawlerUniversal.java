@@ -2,6 +2,7 @@ package com.usamin.nana.extractor;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+//commonly used functions are placed in this file to allow code reuse
 
 public class CrawlerUniversal {
 

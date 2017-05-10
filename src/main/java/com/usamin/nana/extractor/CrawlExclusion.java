@@ -23,7 +23,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
+//parses robots.txt in order to gain url that should not be crawled
 public class CrawlExclusion extends CrawlerUniversal {
 
    String hostname;
