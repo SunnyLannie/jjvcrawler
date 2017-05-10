@@ -72,14 +72,21 @@ public class CrawlExclusion extends CrawlerUniversal {
             String line;
             boolean hasRules = false;
             
-            String regex_keyword = "[\\s]*([\\w-?]+)[\\s]*:[\\s]*"; // group1
-            String regex_allAgents = "([*])|([\\w]+)"; //group2-3
-            String regex_path = "((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*)";        //"([\\/]?[\\w]*)*"; //([\\s]*#+[\\w]*)*
+            /** a robots.txt regex entry is represented by
+             * (regex_keyword) + ((regex_allAgents) + (regex_path + regex_file)) */
+            String regex_keyword = "\\s*([\\w-]+)\\s*:\\s*"; // group(1)
+            String regex_allAgents = "(?:(\\*)|\\w+)"; //group(3)
+            String regex_path = "(?:(?:/[\\w*]+)*/?)*"; 
+            String regex_file = "(?:\\*|[\\w\\-\\.\\_]*[^#?\\s]*)(?:\\.\\w+(?:[-_]\\w+)*)*";
+            
+            String group4 = "(" + regex_path + regex_file + ")";
+            String group2 = "(" + regex_allAgents + "|" + group4 + ")";
+            
+            
+//            String regex_path = "((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*)";        //"([\\/]?[\\w]*)*"; //([\\s]*#+[\\w]*)*
 
             // "[\\s]*([\\w-?]+)[\\s]*:[\\s]*(([*])|([\\w]+)|((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*))"
-            String regex_entry = regex_keyword + "(" +
-                                 regex_allAgents + "|" +
-                                 regex_path + ")";
+            String regex_entry = regex_keyword + group2;
             Pattern entry = Pattern.compile(regex_entry);
             
             while( (line = reader.readLine()) != null ) {
@@ -95,14 +102,14 @@ public class CrawlExclusion extends CrawlerUniversal {
                      break;
                   case "allow":
                      if(!hasRules) break;
-                     path = entryMatch.group(5);
+                     path = entryMatch.group(4);
                      if(path != null && hasRules){
                         ex.allow(path);
                      }
                      break;
                   case "disallow":
                      if(!hasRules) break;
-                     path = entryMatch.group(5);
+                     path = entryMatch.group(4);
                      if(path != null && hasRules){
                         ex.disallow(path);
                      }
@@ -139,6 +146,9 @@ public class CrawlExclusion extends CrawlerUniversal {
       for(Iterator<String> it = allow.iterator(); it.hasNext();) {
          robotstxt = robotstxt + it.next() + newline;
       }
+      
+      System.out.println(disallow.size());
+      System.out.println(allow.size());
       
       return robotstxt;
    }
