@@ -25,5 +25,14 @@ public class CrawlerUniversal {
       String hostname = uri.getHost();
       return hostname;
    }
+   
+   //removes final / from url if it is present
+   public static final String trimUrl(String url){
+	   if (url != null && url.length() > 0 && url.charAt(url.length()-1)=='/') {
+		   url = url.substring(0, url.length()-1);
+		    }
+	   return url;
+	   
+   }
 
 }

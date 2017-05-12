@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.apache.http.HttpEntity;
@@ -41,7 +42,8 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 		resetTime();
 		dlDuration = Duration.ZERO;
 		robotstxt = CrawlExclusion.getExclusions(url);
-		System.out.println(robotstxt);
+		//System.out.println(robotstxt.disallow);
+		//System.out.println(robotstxt);
 	}
 	
 	public DomainCrawler() {
@@ -59,6 +61,11 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
       startNext = Instant.now();
       prevFinished = Instant.now();
    }
+	
+	//obtains everything robots.txt says not to crawl
+	public HashSet getCrawlExclusion(){
+		return robotstxt.disallow;
+	}
 	
 	/*** add url to FIFO queue, discard if it is not from the same domain
 	 * initialize hostname if isn't already initialized **/

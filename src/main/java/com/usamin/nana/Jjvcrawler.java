@@ -30,14 +30,14 @@ public class Jjvcrawler {
 	public static void main(String[] args) {
 
 		
-		// String test =
-		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
-		String test = "https://disorderlylabs.github.io/";
+		String test =
+		 "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
+		//test = "https://disorderlylabs.github.io/";
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
-		test="https://www.equestriadaily.com";
+		//test="https://www.equestriadaily.com";
 		String test2="https://www.macrumors.com/";
-		test="https://www.equestriadaily.com";
+		//test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
@@ -46,8 +46,10 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 		
-		DomainCrawler dc = new DomainCrawler(facebook);
-		System.out.println(dc.crawl());
+		crawlTop top=new crawlTop(facebook);
+		
+		//DomainCrawler dc = new DomainCrawler(test2);
+		//System.out.println(dc.crawl());
 		
 /*		DomainCrawler seedDomain = new DomainCrawler(test);
 		map.put("hi", seedDomain);
