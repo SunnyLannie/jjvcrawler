@@ -2,6 +2,7 @@ package com.usamin.nana;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import com.usamin.nana.extractor.CrawlerUniversal;
 import com.usamin.nana.extractor.DomainCrawler;
@@ -13,7 +14,8 @@ import com.usamin.nana.extractor.DomainCrawler;
 
 public class crawlTop extends CrawlerUniversal {
 	HashSet<String> alreadyCrawled;
-	HashSet<String> toCrawl;
+	//HashSet<String> toCrawl;
+	LinkedList<String> toCrawl;
 	HashSet<String> excludeCrawl;
     long maxIteration=200;
     
@@ -22,7 +24,7 @@ public class crawlTop extends CrawlerUniversal {
 		 alreadyCrawled = new HashSet<String>(); //maybe alreadyCrawled and excludeCrawl should be the same set since they serve the same purpose?
 		 //but maybe not due to robots txt not being a static page
 		 excludeCrawl = new HashSet<String>();
-		 toCrawl = new HashSet<String>();
+		 toCrawl = new LinkedList<String>();
 
 		DomainCrawler dc = new DomainCrawler(url);
 		alreadyCrawled.add(url);
@@ -33,12 +35,17 @@ public class crawlTop extends CrawlerUniversal {
 		}
 		System.err.println(excludeCrawl);
 		int iteration=0;
-		
+		String next;
         do {
     		for(String crawl:dc.crawl()){
-    			toCrawl.add(crawl);
+    			System.err.println("crawl is: "+crawl + " url is: "+url);
+    			if(areSameDomain(crawl,url)){
+    			toCrawl.addFirst(crawl);
+    			}else{
+    				toCrawl.addLast(crawl);
+    			}	
     		}
-    		String next=getNextCrawl();
+          next=getNextCrawl();
     		if(next==null){
     			break;
     		}
@@ -47,13 +54,13 @@ public class crawlTop extends CrawlerUniversal {
     		alreadyCrawled.add(next);//make note that we are going to crawl this
     		iteration++;
             System.out.println("we found: " +alreadyCrawled);
-        } while (iteration<maxIteration); //this is here to stop infinite crawling
+        } while (iteration<maxIteration && areSameDomain(next, url)); // is here to stop infinite crawling and to make it crawl only 1 domain
 
 		//System.err.println("crawltop exclude crawl: "+excludeCrawl);
         System.out.println("we found: " +alreadyCrawled);
 	    }
 	 private String getNextCrawl(){
-		 System.err.println("before "+toCrawl);
+		// System.err.println("before "+toCrawl);
 		 Iterator<String> iterator = toCrawl.iterator();
 		 while (iterator.hasNext()) {
 			 String nextCrawl=iterator.next();
@@ -64,7 +71,7 @@ public class crawlTop extends CrawlerUniversal {
 				 return nextCrawl;
 			 }	 
 		 }	 
-		 System.err.println("after "+toCrawl);
+		 //System.err.println("after "+toCrawl);
 
 		 return null;
 	 }

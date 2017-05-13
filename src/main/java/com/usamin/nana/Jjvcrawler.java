@@ -33,13 +33,13 @@ public class Jjvcrawler {
 		
 		String test =
 		 "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
-		//test = "https://disorderlylabs.github.io/";
+		test = "https://disorderlylabs.github.io/";
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
 		//test="https://www.equestriadaily.com";
 		String test2="https://www.macrumors.com/";
 		//test="https://www.equestriadaily.com";
-		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		 test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
 		PriorityQueue<String> frontier = new PriorityQueue<String> ();
@@ -48,7 +48,7 @@ public class Jjvcrawler {
 		String filename = "unwrap.nana";
 		
 		
-		crawlTop top=new crawlTop("http://www.ucsc.edu");
+		crawlTop top=new crawlTop(test2);
 		
 		//DomainCrawler dc = new DomainCrawler(test2);
 		//System.out.println(dc.crawl());
