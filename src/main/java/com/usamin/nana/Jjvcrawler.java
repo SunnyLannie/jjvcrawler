@@ -10,8 +10,10 @@ import org.jsoup.select.Elements;
 
 import com.usamin.nana.extractor.DomainCrawler;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -27,8 +29,7 @@ import org.apache.http.HttpVersion;
 
 public class Jjvcrawler {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws URISyntaxException {
 		
 		String test =
 		 "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
@@ -46,7 +47,8 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 		
-		crawlTop top=new crawlTop(facebook);
+		
+		crawlTop top=new crawlTop("http://www.ucsc.edu");
 		
 		//DomainCrawler dc = new DomainCrawler(test2);
 		//System.out.println(dc.crawl());

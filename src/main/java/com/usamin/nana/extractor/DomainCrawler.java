@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
 //this crawls a domain, it first looks at that domains robot file
 //it also accounts for politeness factor to avoid spamming server with too many requests
 public class DomainCrawler extends CrawlerUniversal implements Comparable<DomainCrawler> {
@@ -119,9 +120,12 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 				 * attribute
 				 ***/
 				Elements links = doc.select("a[href]");
-
 				/*** Extract and store undiscovered links ***/
 				for (Element link : links) {
+					
+					if(link.attr("abs:href").matches("^mailto.*")){ //make sure it is not a mailto link like "mailto:limeworks@ucsc.edu"
+						continue;
+					}
 					result.add(link.attr("abs:href"));
 				}
 				instream.close();

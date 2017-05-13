@@ -15,7 +15,7 @@ public class crawlTop extends CrawlerUniversal {
 	HashSet<String> alreadyCrawled;
 	HashSet<String> toCrawl;
 	HashSet<String> excludeCrawl;
-    long maxIteration=20;
+    long maxIteration=200;
     
     
 	 public crawlTop(String url) {
@@ -42,6 +42,7 @@ public class crawlTop extends CrawlerUniversal {
     		if(next==null){
     			break;
     		}
+    		System.err.println("the value of next is: "+next);
     		dc.addURL(next); //add to domain crawler queue to crawl
     		alreadyCrawled.add(next);//make note that we are going to crawl this
     		iteration++;
