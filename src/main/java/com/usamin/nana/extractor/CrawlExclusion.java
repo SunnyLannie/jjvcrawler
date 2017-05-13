@@ -48,7 +48,7 @@ public class CrawlExclusion extends CrawlerUniversal {
       CrawlExclusion ex = new CrawlExclusion();
       
       ex.hostname = getHost(url);
-      System.out.println(ex.hostname);
+      //System.out.println(ex.hostname);
       String robotsDotTxt = "https://" + ex.hostname + "/robots.txt";
       
       /** initializing httpclient components */
@@ -147,8 +147,8 @@ public class CrawlExclusion extends CrawlerUniversal {
          robotstxt = robotstxt + it.next() + newline;
       }
       
-      System.out.println(disallow.size());
-      System.out.println(allow.size());
+      //System.out.println(disallow.size());
+      //System.out.println(allow.size());
       
       return robotstxt;
    }

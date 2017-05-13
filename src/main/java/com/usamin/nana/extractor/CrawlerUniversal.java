@@ -25,5 +25,24 @@ public class CrawlerUniversal {
       String hostname = uri.getHost();
       return hostname;
    }
+   
+   //returns true if they are the same domain, and false otherwise
+   public static final boolean areSameDomain(String url1, String url2){
+	   url1=getHost(url1);
+	   url2=getHost(url2);
+	   if(url1==null || url2==null){
+		   return false;
+	   }
+	   return url1.equals(url2); 
+   }
+   
+   //removes final / from url if it is present
+   public static final String trimUrl(String url){
+	   if (url != null && url.length() > 0 && url.charAt(url.length()-1)=='/') {
+		   url = url.substring(0, url.length()-1);
+		    }
+	   return url;
+	   
+   }
 
 }

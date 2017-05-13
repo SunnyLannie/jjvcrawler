@@ -10,8 +10,10 @@ import org.jsoup.select.Elements;
 
 import com.usamin.nana.extractor.DomainCrawler;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -27,18 +29,17 @@ import org.apache.http.HttpVersion;
 
 public class Jjvcrawler {
 
-	public static void main(String[] args) {
-
+	public static void main(String[] args) throws URISyntaxException {
 		
-		// String test =
-		// "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
-		String test = "https://disorderlylabs.github.io/";
+		String test =
+		 "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
+		test = "https://disorderlylabs.github.io/";
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
-		test="https://www.equestriadaily.com";
+		//test="https://www.equestriadaily.com";
 		String test2="https://www.macrumors.com/";
-		test="https://www.equestriadaily.com";
-		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		//test="https://www.equestriadaily.com";
+		 test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
 		PriorityQueue<String> frontier = new PriorityQueue<String> ();
@@ -46,8 +47,11 @@ public class Jjvcrawler {
 		/*** output file name ***/
 		String filename = "unwrap.nana";
 		
-		DomainCrawler dc = new DomainCrawler(facebook);
-		System.out.println(dc.crawl());
+		
+		crawlTop top=new crawlTop(test2);
+		
+		//DomainCrawler dc = new DomainCrawler(test2);
+		//System.out.println(dc.crawl());
 		
 /*		DomainCrawler seedDomain = new DomainCrawler(test);
 		map.put("hi", seedDomain);

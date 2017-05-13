@@ -7,6 +7,7 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import org.apache.http.HttpEntity;
@@ -18,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 
 //this crawls a domain, it first looks at that domains robot file
 //it also accounts for politeness factor to avoid spamming server with too many requests
@@ -41,7 +43,8 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 		resetTime();
 		dlDuration = Duration.ZERO;
 		robotstxt = CrawlExclusion.getExclusions(url);
-		System.out.println(robotstxt);
+		//System.out.println(robotstxt.disallow);
+		//System.out.println(robotstxt);
 	}
 	
 	public DomainCrawler() {
@@ -59,6 +62,11 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
       startNext = Instant.now();
       prevFinished = Instant.now();
    }
+	
+	//obtains everything robots.txt says not to crawl
+	public HashSet getCrawlExclusion(){
+		return robotstxt.disallow;
+	}
 	
 	/*** add url to FIFO queue, discard if it is not from the same domain
 	 * initialize hostname if isn't already initialized **/
@@ -112,9 +120,12 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 				 * attribute
 				 ***/
 				Elements links = doc.select("a[href]");
-
 				/*** Extract and store undiscovered links ***/
 				for (Element link : links) {
+					
+					if(link.attr("abs:href").matches("^mailto.*")){ //make sure it is not a mailto link like "mailto:limeworks@ucsc.edu"
+						continue;
+					}
 					result.add(link.attr("abs:href"));
 				}
 				instream.close();
