@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.usamin.nana.extractor.DomainCrawler;
+import com.usamin.nana.extractor.spark;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -26,7 +27,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 //This is main
 /*** process that downloads and parse webpage for hyperlinks ***/
-
 public class Jjvcrawler {
 
 	public static void main(String[] args) throws URISyntaxException {
@@ -48,7 +48,7 @@ public class Jjvcrawler {
 		String filename = "unwrap.nana";
 		
 		
-		crawlTop top=new crawlTop(test2);
+		//crawlTop top=new crawlTop(test2);
 		
 		//DomainCrawler dc = new DomainCrawler(test2);
 		//System.out.println(dc.crawl());
@@ -61,6 +61,9 @@ public class Jjvcrawler {
         System.out.println(s);
         seedDomain.addURL(links.get(2));
         System.out.println(seedDomain.crawl());*/
+		
+		spark sparky= new spark();
+		
 
 	}
 	
