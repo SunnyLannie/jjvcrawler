@@ -17,7 +17,7 @@ public class crawlTop extends CrawlerUniversal {
 	//HashSet<String> toCrawl;
 	LinkedList<String> toCrawl;
 	HashSet<String> excludeCrawl;
-    long maxIteration=200;
+   long maxIteration=200;
     
     
 	 public crawlTop(String url) {

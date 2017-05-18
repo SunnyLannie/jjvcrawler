@@ -94,9 +94,13 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 		/** remove url from FIFO queue
 		 * If FIFO is empty, just return nothing  */
       String url=null;
-		url = undiscovered.poll();
-		if(url==null){
-		   return result;
+      while(url == null) {
+         if(undiscovered.isEmpty()) return null;
+		   url = undiscovered.poll();
+		   if(robotstxt.isExcluded(url)) {
+		      url = null;
+		   }
+		   
 		}
 	   
 		/** initializing httpclient components */
