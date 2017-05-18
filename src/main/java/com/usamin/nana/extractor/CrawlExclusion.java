@@ -73,8 +73,16 @@ public class CrawlExclusion extends CrawlerUniversal {
    
    public boolean isExcluded(String url) {
       url = removeSpace(url);
+      System.out.println(url);
       Matcher urlComponents = urlPattern.matcher(url);
-      String path = urlComponents.group(6);
+      String path = null;
+      try {
+         path = urlComponents.group(6);
+      } catch (IllegalStateException e) {
+         System.err.println("This URL " + url + " has no path component");
+         return false;
+      }
+      
       boolean excluded = false;
       
       for(String disallowed: disallow) {

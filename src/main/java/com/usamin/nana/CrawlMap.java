@@ -49,7 +49,7 @@ public class CrawlMap extends CrawlerUniversal {
          DomainCrawler crawler = map.get(hostname);
          crawler.addURL(url);
          frontier.add(crawler);
-      }      
+      }
    }
    
    public boolean discover(String url) {
