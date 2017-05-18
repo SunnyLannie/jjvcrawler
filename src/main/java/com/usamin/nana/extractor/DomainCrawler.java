@@ -100,7 +100,6 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 		   if(robotstxt.isExcluded(url)) {
 		      url = null;
 		   }
-		   
 		}
 	   
 		/** initializing httpclient components */

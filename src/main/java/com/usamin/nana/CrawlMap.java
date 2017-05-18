@@ -22,14 +22,12 @@ public class CrawlMap extends CrawlerUniversal {
    ConcurrentHashMap<String, DomainCrawler> map;
    
    public CrawlMap() {
-      super();
       discovered = ConcurrentHashMap.<String>newKeySet();
       frontier = new PriorityBlockingQueue<DomainCrawler>();
       map = new ConcurrentHashMap<String, DomainCrawler>();
    }
    
    public CrawlMap(String seed) {
-      super();
       frontier = new PriorityBlockingQueue<DomainCrawler>();
       
       DomainCrawler crawler = new DomainCrawler(seed);
