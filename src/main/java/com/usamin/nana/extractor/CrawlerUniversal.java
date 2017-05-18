@@ -38,6 +38,7 @@ public class CrawlerUniversal {
    
    //removes final / from url if it is present
    public static final String trimUrl(String url){
+      url = url.trim();
 	   if (url != null && url.length() > 0 && url.charAt(url.length()-1)=='/') {
 		   url = url.substring(0, url.length()-1);
 		    }

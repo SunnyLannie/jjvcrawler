@@ -23,25 +23,76 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+
 //parses robots.txt in order to gain url that should not be crawled
 public class CrawlExclusion extends CrawlerUniversal {
 
+   final String urlRegexComponents = 
+         "(^(([^:/?#]+):)?(//([^/?#]*))?)(([^?#]*)(\\?([^#]*))?(#(.*))?)";
+   final String exclusionEntryComponents;
+   final Pattern urlPattern;
+   final Pattern exclusionEntry; 
+   
    String hostname;
    Instant expiration;
    HashSet<String> disallow;
    HashSet<String> allow;
    
-   public CrawlExclusion() {
+   
+   private CrawlExclusion() {
       disallow = new HashSet<String>();
       allow = new HashSet<String>();
+      
+      /** a robots.txt regex entry is represented by
+       * (regex_keyword) + ((regex_allAgents) + (regex_path + regex_file)) */
+      String regex_keyword = "\\s*([\\w-]+)\\s*:\\s*"; // group(1)
+      String regex_allAgents = "(?:(\\*)|\\w+)"; //group(3)
+      String regex_path = "(?:(?:/[\\w*]+)*/?)*"; 
+      String regex_file = "(?:\\*|[\\w\\-\\.\\_]*[^#?\\s]*)(?:\\.\\w+(?:[-_]\\w+)*)*";
+      
+      String group4 = "(" + regex_path + regex_file + ")";
+      String group2 = "(" + regex_allAgents + "|" + group4 + ")";
+      
+      
+//      String regex_path = "((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*)";        //"([\\/]?[\\w]*)*"; //([\\s]*#+[\\w]*)*
+
+      // "[\\s]*([\\w-?]+)[\\s]*:[\\s]*(([*])|([\\w]+)|((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*))"
+      exclusionEntryComponents = regex_keyword + group2;
+      exclusionEntry = Pattern.compile(exclusionEntryComponents);
+      urlPattern = Pattern.compile(urlRegexComponents);
    }
    
-   private void allow(String path) {
-      allow.add(path);
+   public HashSet<String> disallow() {
+      return disallow;
    }
    
-   private void disallow(String path) {
-      disallow.add(path);
+   public HashSet<String> allow() {
+      return allow;
+   }
+   
+   public boolean isExcluded(String url) {
+      url = removeSpace(url);
+      Matcher urlComponents = urlPattern.matcher(url);
+      String path = urlComponents.group(6);
+      boolean excluded = false;
+      
+      for(String disallowed: disallow) {
+         
+         excluded = path.contains(disallowed);
+         
+         if(excluded) {
+            for(String allowed: allow) {
+               if(url.equals(allowed)){
+                  excluded = false;
+                  return excluded;
+               }
+            }
+            break;
+         }
+      }
+      
+      return excluded;
    }
    
    public static CrawlExclusion getExclusions(String url) {
@@ -71,27 +122,10 @@ public class CrawlExclusion extends CrawlerUniversal {
             
             String line;
             boolean hasRules = false;
-            
-            /** a robots.txt regex entry is represented by
-             * (regex_keyword) + ((regex_allAgents) + (regex_path + regex_file)) */
-            String regex_keyword = "\\s*([\\w-]+)\\s*:\\s*"; // group(1)
-            String regex_allAgents = "(?:(\\*)|\\w+)"; //group(3)
-            String regex_path = "(?:(?:/[\\w*]+)*/?)*"; 
-            String regex_file = "(?:\\*|[\\w\\-\\.\\_]*[^#?\\s]*)(?:\\.\\w+(?:[-_]\\w+)*)*";
-            
-            String group4 = "(" + regex_path + regex_file + ")";
-            String group2 = "(" + regex_allAgents + "|" + group4 + ")";
-            
-            
-//            String regex_path = "((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*)";        //"([\\/]?[\\w]*)*"; //([\\s]*#+[\\w]*)*
 
-            // "[\\s]*([\\w-?]+)[\\s]*:[\\s]*(([*])|([\\w]+)|((?:[\\/?\\w]+[\\w\\-\\.]?[^#?\\s]?)*))"
-            String regex_entry = regex_keyword + group2;
-            Pattern entry = Pattern.compile(regex_entry);
-            
             while( (line = reader.readLine()) != null ) {
                
-               Matcher entryMatch = entry.matcher(line);
+               Matcher entryMatch = ex.exclusionEntry.matcher(line);
                if(entryMatch.matches()){
                   String keyword = entryMatch.group(1).toLowerCase();
                   String path = null;
@@ -104,14 +138,14 @@ public class CrawlExclusion extends CrawlerUniversal {
                      if(!hasRules) break;
                      path = entryMatch.group(4);
                      if(path != null && hasRules){
-                        ex.allow(path);
+                        ex.allow.add(path);
                      }
                      break;
                   case "disallow":
                      if(!hasRules) break;
                      path = entryMatch.group(4);
                      if(path != null && hasRules){
-                        ex.disallow(path);
+                        ex.disallow.add(path);
                      }
                      break;
                   default:
@@ -146,9 +180,6 @@ public class CrawlExclusion extends CrawlerUniversal {
       for(Iterator<String> it = allow.iterator(); it.hasNext();) {
          robotstxt = robotstxt + it.next() + newline;
       }
-      
-      //System.out.println(disallow.size());
-      //System.out.println(allow.size());
       
       return robotstxt;
    }

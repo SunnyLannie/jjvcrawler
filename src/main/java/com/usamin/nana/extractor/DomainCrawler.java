@@ -65,7 +65,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 	
 	//obtains everything robots.txt says not to crawl
 	public HashSet getCrawlExclusion(){
-		return robotstxt.disallow;
+		return robotstxt.disallow();
 	}
 	
 	/*** add url to FIFO queue, discard if it is not from the same domain
@@ -84,6 +84,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
    /** remove first element from FIFO queue and extract links found */
 	public LinkedList<String> crawl() {
 	   
+	   	   
 	   timeout();
 	   resetTime();
 	   
@@ -92,7 +93,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 
 		/** remove url from FIFO queue
 		 * If FIFO is empty, just return nothing  */
-        String url=null;
+      String url=null;
 		url = undiscovered.poll();
 		if(url==null){
 		   return result;
@@ -177,3 +178,6 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
    }
 
 }
+
+
+
