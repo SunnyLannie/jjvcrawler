@@ -1,7 +1,8 @@
 package com.usamin.nana.extractor;
 import static spark.Spark.*;
 
-
+//http://sparkjava.com/documentation#views-and-templates
+//curl localhost:4567/hello/world
 public class spark {
 	public spark() {
 		
