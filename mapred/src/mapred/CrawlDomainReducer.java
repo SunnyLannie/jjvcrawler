@@ -22,20 +22,35 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class CrawlDomainReducer
-      extends Reducer<Text, Text, Iterable<Text>, Text>
+      extends Reducer<Text, Text, Text, Text>
 {
    
    public void reduce(Text key, Iterable<Text> values, Context context) 
          throws IOException, InterruptedException
    {
+      String frontier = "";
+      String crawlResult = "";
+      long politeness = 50;
       Iterator<Text> iter = values.iterator();
-      if(iter.hasNext()) {
-         Text value = iter.next();
-         Text crawlResult = 
-               crawl(new Text("https://" + key.toString() + value.toString()));
-         iter.remove();
-         context.write(values, crawlResult);
+      for(Instant startNext = Instant.now(); iter.hasNext();) {
+         
+         if(startNext.isBefore(Instant.now()) || startNext.equals(Instant.now())){
+            Text value = iter.next();
+            crawlResult = 
+                  crawl(new Text("https://" + key.toString() + value.toString()));
+            Instant prevFinished = Instant.now();
+            Duration dlDuration = Duration.between(startNext, prevFinished);
+            startNext = prevFinished.plus( dlDuration.multipliedBy(50) );
+         } else {
+            Text value = iter.next();
+            frontier = frontier + value.toString() + " ";
+         }
+         
       }
+      frontier = frontier.trim();
+         
+      context.write(new Text(frontier), new Text(crawlResult));
+         
    }
    
    /** check and enforce politeness by sleeping the thread for the necessary duration */
@@ -50,12 +65,10 @@ public class CrawlDomainReducer
             return;
          }
       }
-
-      
    }
    
    /** remove first element from FIFO queue and extract links found */
-   private Text crawl(Text value) {
+   private String crawl(Text value) {
       
       
       /** list to store undiscovered urls on this page */
@@ -68,7 +81,6 @@ public class CrawlDomainReducer
       /** initializing httpclient components */
       CloseableHttpClient httpclient = HttpClients.createDefault();
       CloseableHttpResponse response;
-        System.err.println("url is" +url);
       HttpGet httpget = new HttpGet(url);
       
       try {
@@ -100,14 +112,14 @@ public class CrawlDomainReducer
          response.close();
 
       } catch (IOException e) {
+         //fix this later
+         System.err.println("HI");
          return null;
       }
 
-      //System.err.println(result);
-      //dl = System.currentTimeMillis() - startTime;
-      //System.err.println("time in milliseconds is: " + dl);
+      result = result.trim();
 
-      return new Text(result);
+      return result;
 
    }
 
