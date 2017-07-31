@@ -31,33 +31,24 @@ import org.apache.http.HttpVersion;
 /*** process that downloads and parse webpage for hyperlinks ***/
 
 public class Jjvcrawler {
-	static int NUM_THREADS=4;
+	final static int SUGGESTED_NUM_THREADS=2;
+	static int NUM_THREADS=SUGGESTED_NUM_THREADS;
   final static int MAX_THREADS=10;
 	public static void main(String[] args) throws URISyntaxException {
 		System.out.println("ran");
 		
+		//obtain number of threads
 	    if(args.length>0){
 	    	try{
 	    	NUM_THREADS=Integer.parseInt(args[0]);
 	    	}catch(Exception e){
-	    		NUM_THREADS=4;
+	    		NUM_THREADS=SUGGESTED_NUM_THREADS;
 	    	}
 	    }
 	    //avoid issues where the user wants millions of threads
 		if(NUM_THREADS>MAX_THREADS){
 			NUM_THREADS=MAX_THREADS;
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		String test =
@@ -79,25 +70,22 @@ public class Jjvcrawler {
 		
 		
 		crawlTop top=new crawlTop(test);  //crawl top is where the actual crawling takes place inside of a for loop. 
-		//something where we have multiple threads there will be ideal for it
-		//each thread could crawl a different domain
-		//DomainCrawler dc = new DomainCrawler(test);
-		//top.executeCrawl(dc);
 		
 		final long startTime = System.currentTimeMillis();
 
 		
-		
+		//for final refactor look at which files are not actually used
 		 ExecutorService threadPool = Executors.newFixedThreadPool(NUM_THREADS);
 		 // submit jobs to be executing by the pool
 		 final String testHere=test;
+		 //pass the i into crawlThreading, if it isn't 0. don't crawl testHere
 		 for (int i = 0; i < NUM_THREADS; i++) {		  
-		             Runnable worker = new crawlThreading(top,testHere);  
+		             Runnable worker = new crawlThreading(top,testHere,i);  
 		             threadPool.execute(worker);//calling execute method of ExecutorService  
 		 }
 		 // once you've submitted your last job to the service it should be shut down
 		 threadPool.shutdown();
-		 // wait for the threads to finish if necessary
+		 // wait for the threads to finish
 		 try {
 			threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e1) {

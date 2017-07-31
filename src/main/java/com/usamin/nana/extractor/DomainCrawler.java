@@ -81,6 +81,14 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
       
    }
    
+   public String getNextCrawlUrl(){
+	   return undiscovered.peek();
+   }
+   public void removeNextCrawlUrl(){
+	   undiscovered.poll();
+   }
+   
+   
    /** remove first element from FIFO queue and extract links found */
 	public LinkedList<String> crawl() {
 	   

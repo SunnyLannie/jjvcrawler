@@ -63,6 +63,20 @@ public class crawlTop extends CrawlerUniversal {
 	 public void executeCrawl(DomainCrawler dc){
 	        String next;
 			do {
+				while(dc.getNextCrawlUrl()==null){
+		    		next=getNextCrawl(); 
+		    		if(next==null){
+		    			try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		    			continue;
+		    		}
+					dc.addURL(next);
+				}
+				
 	    		for(String crawl:dc.crawl()){
 	    			System.err.println("crawl is: "+crawl + " url is: "+url);
 	    			if(areSameDomain(crawl,url)){
@@ -75,21 +89,20 @@ public class crawlTop extends CrawlerUniversal {
 		    			toCrawlLock.unlock();
 	    			}	
 	    		}
-	    		next=getNextCrawl(); //concurent modifcation exception
+	    		next=getNextCrawl(); 
 	    		if(next==null){
 	    			break;
 	    		}
 	    		System.err.println("the value of next is: "+next);
 	    		dc.addURL(next); //add to domain crawler queue to crawl
-	    		discovered.add(next);//make note that we are going to crawl this
+	    		discovered.add(next);//make note to other threads that this is going to be crawled
 	    		incrementIteration();
 	    		System.out.println("we found: " +discovered);
 	        } while (getIteration()<maxIteration && areSameDomain(next, url)); // is here to stop infinite crawling and to make it crawl only 1 domain
 
 			//System.err.println("crawltop exclude crawl: "+excludeCrawl);
 	        System.out.println("we found: " +discovered);
-
-		 
+	        System.out.println("the number of items we found is: "+discovered.size());
 	 }
 	 
 	 
