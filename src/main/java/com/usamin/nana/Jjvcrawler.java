@@ -30,6 +30,23 @@ import org.apache.http.HttpVersion;
 public class Jjvcrawler {
 
 	public static void main(String[] args) throws URISyntaxException {
+		System.out.println("ran");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		String test =
 		 "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
@@ -39,28 +56,34 @@ public class Jjvcrawler {
 		//test="https://www.equestriadaily.com";
 		String test2="https://www.macrumors.com/";
 		//test="https://www.equestriadaily.com";
-		 test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 		HashMap<String, DomainCrawler> map = 
 		      new HashMap<String, DomainCrawler>();
 		PriorityQueue<String> frontier = new PriorityQueue<String> ();
 
 		/*** output file name ***/
+		
 		String filename = "unwrap.nana";
 		
 		
-		crawlTop top=new crawlTop(test2);
+		crawlTop top=new crawlTop(test);  //crawl top is where the actual crawling takes place inside of a for loop. 
+		//something where we have multiple threads there will be ideal for it
+		//each thread could crawl a different domain
+		
 		
 		//DomainCrawler dc = new DomainCrawler(test2);
 		//System.out.println(dc.crawl());
 		
-/*		DomainCrawler seedDomain = new DomainCrawler(test);
+		/*
+		DomainCrawler seedDomain = new DomainCrawler(test);
 		map.put("hi", seedDomain);
 		LinkedList<String> links = seedDomain.crawl();
 		Set<String> s = new LinkedHashSet<>(links);
 
         System.out.println(s);
         seedDomain.addURL(links.get(2));
-        System.out.println(seedDomain.crawl());*/
+        System.out.println(seedDomain.crawl());
+        */
 
 	}
 	

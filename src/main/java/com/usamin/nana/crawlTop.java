@@ -1,8 +1,11 @@
 package com.usamin.nana;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.usamin.nana.extractor.CrawlerUniversal;
 import com.usamin.nana.extractor.DomainCrawler;
@@ -13,9 +16,13 @@ import com.usamin.nana.extractor.DomainCrawler;
 //TODO add a new class where each domain has it's own class
 
 public class crawlTop extends CrawlerUniversal {
-	HashSet<String> discovered;
+	Set<String> discovered = ConcurrentHashMap.newKeySet(); //thread safe set
+//	HashSet<String> discovered;
 	//HashSet<String> toCrawl;
 	LinkedList<String> toCrawl;
+	
+
+	
    long maxIteration=200;
    CrawlMap map;
     
@@ -52,13 +59,14 @@ public class crawlTop extends CrawlerUniversal {
 
 		//System.err.println("crawltop exclude crawl: "+excludeCrawl);
         System.out.println("we found: " +discovered);
-	    }
+    }
 	 
 	 public void retrieveMap(CrawlMap cm) {
 	    map = cm;
 	 }
 	 
-	 private String getNextCrawl(){
+	 //synchronized to stop 
+	 private synchronized  String getNextCrawl(){
 		// System.err.println("before "+toCrawl);
 		 Iterator<String> iterator = toCrawl.iterator();
 		 while (iterator.hasNext()) {
@@ -74,5 +82,4 @@ public class crawlTop extends CrawlerUniversal {
 
 		 return null;
 	 }
-
 }
