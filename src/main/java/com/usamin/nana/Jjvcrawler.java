@@ -69,9 +69,34 @@ public class Jjvcrawler {
 		crawlTop top=new crawlTop(test);  //crawl top is where the actual crawling takes place inside of a for loop. 
 		//something where we have multiple threads there will be ideal for it
 		//each thread could crawl a different domain
+		//DomainCrawler dc = new DomainCrawler(test);
+		//top.executeCrawl(dc);
+		
+		final long startTime = System.currentTimeMillis();
+
+		
+		crawlThreading thread= new crawlThreading(top, test);
+		crawlThreading thread1= new crawlThreading(top, test);
+
+		thread.start();
+		thread1.start();
 		
 		
-		//DomainCrawler dc = new DomainCrawler(test2);
+		try{thread.join();
+        }catch(Exception e){
+            System.err.println(e);
+        }
+		
+		try{thread1.join();
+        }catch(Exception e){
+            System.err.println(e);
+        }    
+
+		
+		final long endTime = System.currentTimeMillis();
+      
+		System.out.println("Total execution time: " + (endTime - startTime) );
+
 		//System.out.println(dc.crawl());
 		
 		/*
