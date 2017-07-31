@@ -2,7 +2,7 @@ package com.usamin.nana;
 
 import com.usamin.nana.extractor.DomainCrawler;
 
-public class crawlThreading extends Thread{
+public class crawlThreading implements Runnable{
 	final private crawlTop top;
     final private String initialCrawl;
 	public crawlThreading(crawlTop top, String initialCrawl){
