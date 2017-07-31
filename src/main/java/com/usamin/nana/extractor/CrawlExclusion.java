@@ -64,13 +64,13 @@ public class CrawlExclusion extends CrawlerUniversal {
 
 	public boolean isExcluded(String url) {
 		url = removeSpace(url);
-		System.out.println(url);
+		debugPrint(url);
 		Matcher urlComponents = urlPattern.matcher(url);
 		String path = null;
 		try {
 			path = urlComponents.group(6);
 		} catch (IllegalStateException e) {
-			System.err.println("This URL " + url + " has no path component");
+			debugPrint("This URL " + url + " has no path component");
 			return false;
 		}
 
@@ -94,11 +94,11 @@ public class CrawlExclusion extends CrawlerUniversal {
 		return excluded;
 	}
 
-	public static CrawlExclusion getExclusions(String url) {
+	public  static CrawlExclusion getExclusions(String url) {
 		CrawlExclusion ex = new CrawlExclusion();
 
 		ex.hostname = getHost(url);
-		// System.out.println(ex.hostname);
+		//debugPrint(ex.hostname);
 		String robotsDotTxt = "https://" + ex.hostname + "/robots.txt";
 
 		/** initializing httpclient components */

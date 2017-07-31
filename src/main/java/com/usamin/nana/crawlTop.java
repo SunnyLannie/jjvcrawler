@@ -24,17 +24,12 @@ public class crawlTop extends CrawlerUniversal {
 	private Lock toCrawlLock;
 
 	final String url;
-
 	public crawlTop(String url) {
 		this.url = url;
-		discovered = new HashSet<String>(); // maybe alreadyCrawled and
-											// excludeCrawl should be the same
-											// set since they serve the same
-											// purpose?
-		// but maybe not due to robots txt not being a static page
-		toCrawl = new LinkedList<String>();
+		discovered = new HashSet<String>(); //contains url that already have been crawled or are about to be
+		toCrawl = new LinkedList<String>(); //url that will be crawled shortly
 		url = trimUrl(url); // remove extra '/'
-		discovered.add(url);
+		discovered.add(url); //populate discovered with first url to be crawled
 		lock = new ReentrantLock();
 		toCrawlLock = new ReentrantLock();
 	}
@@ -69,7 +64,7 @@ public class crawlTop extends CrawlerUniversal {
 			}
 
 			for (String crawl : dc.crawl()) {
-				System.err.println("crawl is: " + crawl + " url is: " + url);
+				debugPrint("crawl is: " + crawl + " url is: " + url);
 				if (areSameDomain(crawl, url)) {
 					toCrawlLock.lock();
 					toCrawl.addFirst(crawl);
@@ -84,12 +79,12 @@ public class crawlTop extends CrawlerUniversal {
 			if (next == null) {
 				break;
 			}
-			System.err.println("the value of next is: " + next);
+			debugPrint("the value of next is: " + next);
 			dc.addURL(next); // add to domain crawler queue to crawl
 			discovered.add(next);// make note to other threads that this is
 									// going to be crawled
 			incrementIteration();
-			System.out.println("we found: " + discovered);
+			debugPrint("we found: " + discovered);
 		} while (getIteration() < maxIteration && areSameDomain(next, url)); // is
 																				// here
 																				// to
@@ -105,7 +100,7 @@ public class crawlTop extends CrawlerUniversal {
 																				// 1
 																				// domain
 
-		// System.err.println("crawltop exclude crawl: "+excludeCrawl);
+		//debugPrint("crawltop exclude crawl: "+excludeCrawl);
 		System.out.println("we found: " + discovered);
 		System.out.println("the number of items we found is: " + discovered.size());
 	}
@@ -116,7 +111,7 @@ public class crawlTop extends CrawlerUniversal {
 
 	// synchronized to stop different threads from crawling the same url
 	private String getNextCrawl() {
-		// System.err.println("before "+toCrawl);
+		// debugPrint("before "+toCrawl);
 		toCrawlLock.lock();
 		Iterator<String> iterator = toCrawl.iterator();
 		while (iterator.hasNext()) {
@@ -124,13 +119,13 @@ public class crawlTop extends CrawlerUniversal {
 			iterator.remove();
 			if (discovered.contains(nextCrawl)) {
 			} else {
-				System.err.println("after " + toCrawl); // modified exception
+				debugPrint("after " + toCrawl); // modified exception
 				toCrawlLock.unlock();
 
 				return nextCrawl;
 			}
 		}
-		// System.err.println("after "+toCrawl);
+		// debugPrint("after "+toCrawl);
 		toCrawlLock.unlock();
 
 		return null;

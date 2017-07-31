@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 //commonly used functions are placed in this file to allow code reuse
 
 public class CrawlerUniversal {
+	private final boolean DEBUG = false;
 
 	public CrawlerUniversal() {
 
@@ -45,5 +46,13 @@ public class CrawlerUniversal {
 		return url;
 
 	}
+
+	public  void debugPrint(String s) {
+		if (DEBUG) {
+			System.err.println(s);
+		}
+
+	}
+
 
 }

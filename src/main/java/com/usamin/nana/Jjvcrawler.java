@@ -1,10 +1,6 @@
 package com.usamin.nana;
 
-import com.usamin.nana.extractor.DomainCrawler;
-
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.PriorityQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +12,8 @@ public class Jjvcrawler {
 	final static int SUGGESTED_NUM_THREADS = 2;
 	static int NUM_THREADS = SUGGESTED_NUM_THREADS;
 	final static int MAX_THREADS = 10;
-
+	//first command line arg is url to start crawling with
+    //second command line arg is number of threads
 	public static void main(String[] args) throws URISyntaxException {
 		System.out.println("ran");
 
@@ -40,18 +37,15 @@ public class Jjvcrawler {
 		// test="https://www.equestriadaily.com";
 		String test2 = "https://www.macrumors.com/";
 		// test="https://www.equestriadaily.com";
-		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
-		HashMap<String, DomainCrawler> map = new HashMap<String, DomainCrawler>();
-		PriorityQueue<String> frontier = new PriorityQueue<String>();
+	//	 test= "https://sites.google.com/site/daviddeyellwatercolor/";
+		
 
 		/*** output file name ***/
 
 		String filename = "unwrap.nana";
 
 		crawlTop top = new crawlTop(test); // crawl top is where the actual
-											// crawling takes place inside of a
-											// for loop.
-
+											// crawling takes place 
 		final long startTime = System.currentTimeMillis();
 
 		// for final refactor look at which files are not actually used

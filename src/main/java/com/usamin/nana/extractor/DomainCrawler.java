@@ -40,8 +40,8 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 		resetTime();
 		dlDuration = Duration.ZERO;
 		robotstxt = CrawlExclusion.getExclusions(url);
-		// System.out.println(robotstxt.disallow);
-		// System.out.println(robotstxt);
+		// debugPrint(robotstxt.disallow.toString());
+		// debugPrint(robotstxt.toString());
 	}
 
 	public DomainCrawler() {
