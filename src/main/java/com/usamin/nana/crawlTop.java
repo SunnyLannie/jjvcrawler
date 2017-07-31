@@ -98,7 +98,7 @@ public class crawlTop extends CrawlerUniversal {
 	 }
 	 
 	 //synchronized to stop different threads from crawling the same url
-	 private synchronized  String getNextCrawl(){
+	 private String getNextCrawl(){
 		// System.err.println("before "+toCrawl);
 		toCrawlLock.lock();
 		Iterator<String> iterator = toCrawl.iterator();
