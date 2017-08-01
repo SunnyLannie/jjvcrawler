@@ -18,7 +18,6 @@ public class crawlTop extends CrawlerUniversal {
 	Set<String> discovered = ConcurrentHashMap.newKeySet(); // thread safe set
 	LinkedList<String> toCrawl;
 
-	CrawlMap map;
 	int iteration = 0;
 	private Lock lock;
 	private Lock toCrawlLock;
@@ -117,9 +116,7 @@ public class crawlTop extends CrawlerUniversal {
 		return discovered;
 	}
 
-	public void retrieveMap(CrawlMap cm) {
-		map = cm;
-	}
+
 
 	// synchronized to stop different threads from crawling the same url
 	private String getNextCrawl() {
