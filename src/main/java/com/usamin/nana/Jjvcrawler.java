@@ -1,51 +1,93 @@
 package com.usamin.nana;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.usamin.nana.extractor.CrawlerUniversal;
+
 //This is main
 /*** process that downloads and parse webpage for hyperlinks ***/
 
-public class Jjvcrawler {
+public class Jjvcrawler extends CrawlerUniversal {
 	final static int SUGGESTED_NUM_THREADS = 2;
 	static int NUM_THREADS = SUGGESTED_NUM_THREADS;
 	final static int MAX_THREADS = 10;
-	//first command line arg is url to start crawling with
-    //second command line arg is number of threads
-	public static void main(String[] args) throws URISyntaxException {
-		System.out.println("ran");
 
-		// obtain number of threads
-		if (args.length > 0) {
-			try {
-				NUM_THREADS = Integer.parseInt(args[0]);
-			} catch (Exception e) {
-				NUM_THREADS = SUGGESTED_NUM_THREADS;
+	// first command line arg is url to start crawling with
+	// second command line arg is number of threads
+	// third is debug print
+	// fourth it stdout vs file
+	// fifth is filename
+	// default values will be used if any of these are not provided
+	public static void main(String[] args) throws URISyntaxException {
+		String crawl = "https://disorderlylabs.github.io/";
+		String filename = "init";
+		boolean stdout = true;
+       //deal with parsing command line args and setting appropriate flags
+		for (int i = 0; i < args.length && i < 5; i++) {
+			if (i == 0) {// url domain to crawl
+				crawl = args[0];
+			} else if (i == 1) { // obtain number of threads
+				try {
+					NUM_THREADS = Integer.parseInt(args[0]);
+				} catch (Exception e) {
+					NUM_THREADS = SUGGESTED_NUM_THREADS;
+				}
+
+				// avoid issues where the user wants millions of threads
+				if (NUM_THREADS > MAX_THREADS) {
+					NUM_THREADS = MAX_THREADS;
+				}
+			} else if (i == 2) {// set debug output to true
+				try {
+					if (args[2].equalsIgnoreCase("debug")) {
+						setDebugTrue();
+					} else if (Integer.parseInt(args[2]) > 0) {
+						setDebugTrue();
+					}
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			} else if (i == 3) {// stdout vs file
+				try {
+					if (args[3].equalsIgnoreCase("file")) {
+						stdout = false;
+					} else if (Integer.parseInt(args[3]) > 0) {
+						stdout = false;
+					}
+				} catch (Exception e) {
+					// e.printStackTrace();
+				}
+			} else if (i == 4) { // filename if printing to file
+				filename = args[4];
 			}
 		}
-		// avoid issues where the user wants millions of threads
-		if (NUM_THREADS > MAX_THREADS) {
-			NUM_THREADS = MAX_THREADS;
-		}
-
+		/*
+		System.out.println(crawl);
+		System.out.println(filename);
+		System.out.println(stdout);
+		System.out.println(getDebugFlag());
+		System.exit(0);
+*/
+		
+		
+		
 		String test = "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
 		test = "https://disorderlylabs.github.io/";
 		String reddit = "https://www.reddit.com/";
 		String facebook = "https://www.facebook.com";
 		// test="https://www.equestriadaily.com";
 		String test2 = "https://www.macrumors.com/";
-		// test="https://www.equestriadaily.com";
-	//	 test= "https://sites.google.com/site/daviddeyellwatercolor/";
-		
-
-		/*** output file name ***/
-
-		String filename = "unwrap.nana";
+		 test="https://www.equestriadaily.com";
+		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 
 		crawlTop top = new crawlTop(test); // crawl top is where the actual
-											// crawling takes place 
+											// crawling takes place
 		final long startTime = System.currentTimeMillis();
 
 		// for final refactor look at which files are not actually used
@@ -72,6 +114,26 @@ public class Jjvcrawler {
 
 		System.out.println("Total execution time: " + (endTime - startTime));
 
+		
+		for(String s:top.getCrawledUrl()){
+			System.out.println(s);
+		}
+		
+		if(stdout==true){
+		System.out.println(top.getCrawledUrl());
+		}else{//print to filename
+			try {
+			    PrintWriter pw = new PrintWriter(filename, "UTF-8");
+			    pw.println("List of url crawled");
+				for(String s:top.getCrawledUrl()){
+					pw.println(s);
+				}
+				pw.close();
+			} catch (IOException e) {
+				//e.printStackTrace();
+			}
+		
+		}
 	}
 	/*
 	 * crawlThreading thread= new crawlThreading(top, test); crawlThreading

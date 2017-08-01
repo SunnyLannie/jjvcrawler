@@ -17,7 +17,7 @@ public class crawlTop extends CrawlerUniversal {
 	Set<String> discovered = ConcurrentHashMap.newKeySet(); // thread safe set
 	LinkedList<String> toCrawl;
 
-	long maxIteration = 200;
+	long maxIteration = 2;
 	CrawlMap map;
 	int iteration = 0;
 	private Lock lock;
@@ -101,8 +101,12 @@ public class crawlTop extends CrawlerUniversal {
 																				// domain
 
 		//debugPrint("crawltop exclude crawl: "+excludeCrawl);
-		System.out.println("we found: " + discovered);
-		System.out.println("the number of items we found is: " + discovered.size());
+		//System.out.println("we found: " + discovered);
+		//System.out.println("the number of items we found is: " + discovered.size());
+	}
+	
+	public Set<String> getCrawledUrl(){
+		return discovered;
 	}
 
 	public void retrieveMap(CrawlMap cm) {

@@ -5,12 +5,21 @@ import java.net.URISyntaxException;
 //commonly used functions are placed in this file to allow code reuse
 
 public class CrawlerUniversal {
-	private final boolean DEBUG = false;
+	private static  boolean DEBUG = false;
 
 	public CrawlerUniversal() {
-
 	}
 
+	public static void setDebugTrue(){
+		DEBUG=true;
+	}
+	public static void setDebugFalse(){
+		DEBUG=false;
+	}
+	public static boolean getDebugFlag(){
+		return DEBUG;
+	}
+	
 	public static final String removeSpace(String url) {
 		return url.replaceAll(" ", "%20");
 	}
