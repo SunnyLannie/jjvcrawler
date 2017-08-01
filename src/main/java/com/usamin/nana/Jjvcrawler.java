@@ -26,13 +26,14 @@ public class Jjvcrawler extends CrawlerUniversal {
 	// third is debug print
 	// fourth it stdout vs file
 	// fifth is filename
+	//sixth is number of iterations to run
 	// default values will be used if any of these are not provided
 	public static void main(String[] args) throws URISyntaxException {
 		String crawl = "https://disorderlylabs.github.io/";
 		String filename = "init";
 		boolean stdout = true;
        //deal with parsing command line args and setting appropriate flags
-		for (int i = 0; i < args.length && i < 5; i++) {
+		for (int i = 0; i < args.length && i < 6; i++) {
 			if (i == 0) {// url domain to crawl
 				crawl = args[0];
 			} else if (i == 1) { // obtain number of threads
@@ -68,6 +69,12 @@ public class Jjvcrawler extends CrawlerUniversal {
 				}
 			} else if (i == 4) { // filename if printing to file
 				filename = args[4];
+			}else if(i==5){
+				try{
+				setNumberIterationsCrawl(Integer.parseInt(args[5]));
+				}catch(Exception e){
+					setNumberIterationsCrawl(200);
+				}
 			}
 		}
 		/*
@@ -80,26 +87,16 @@ public class Jjvcrawler extends CrawlerUniversal {
 		
 		
 		
-		String test = "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
-		test = "https://disorderlylabs.github.io/";
-		String reddit = "https://www.reddit.com/";
-		String facebook = "https://www.facebook.com";
-		// test="https://www.equestriadaily.com";
-		String test2 = "https://www.macrumors.com/";
-		// test="https://www.equestriadaily.com";
-		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
-
-		crawlTop top = new crawlTop(test); // crawl top is where the actual
+		crawlTop top = new crawlTop(crawl); // crawl top is where the actual
 											// crawling takes place
 		final long startTime = System.currentTimeMillis();
 
 		// for final refactor look at which files are not actually used
 		ExecutorService threadPool = Executors.newFixedThreadPool(NUM_THREADS);
 		// submit jobs to be executing by the pool
-		final String testHere = test;
 		// pass the i into crawlThreading, if it isn't 0. don't crawl testHere
 		for (int i = 0; i < NUM_THREADS; i++) {
-			Runnable worker = new crawlThreading(top, testHere, i);
+			Runnable worker = new crawlThreading(top, crawl, i);
 			threadPool.execute(worker);// calling execute method of
 										// ExecutorService
 		}
@@ -118,12 +115,14 @@ public class Jjvcrawler extends CrawlerUniversal {
 		System.out.println("Total execution time: " + (endTime - startTime));
 
 		
-		for(String s:top.getCrawledUrl()){
-			System.out.println(s);
-		}
-		
+
+		//deals with printing 
+	    LinkedHashSet<String> hash=top.getFoundUrl();
 		if(stdout==true){
+		System.out.println("List of url crawled");
 		System.out.println(top.getCrawledUrl());
+		System.out.println("List of url found");
+		System.out.print(hash);
 		}else{//print to filename
 			try {
 				 File file = new File(filename);
@@ -136,7 +135,6 @@ public class Jjvcrawler extends CrawlerUniversal {
 					pw.println(s);
 				}
 			    pw.println("List of url found");
-			    LinkedHashSet<String> hash=top.getFoundUrl();
 			    for(String s:hash){
 					pw.println(s);
 			    }
@@ -169,4 +167,15 @@ public class Jjvcrawler extends CrawlerUniversal {
 	 * System.out.println(seedDomain.crawl());
 	 */
 
+	/*
+	 * 		String test = "https://en.wikipedia.org/wiki/Cassiopeia_(constellation)";
+		test = "https://disorderlylabs.github.io/";
+		String reddit = "https://www.reddit.com/";
+		String facebook = "https://www.facebook.com";
+		// test="https://www.equestriadaily.com";
+		String test2 = "https://www.macrumors.com/";
+		// test="https://www.equestriadaily.com";
+		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
+
+	 */
 }

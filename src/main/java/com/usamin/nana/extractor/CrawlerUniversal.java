@@ -6,10 +6,22 @@ import java.net.URISyntaxException;
 
 public class CrawlerUniversal {
 	private static  boolean DEBUG = false;
-
+     private static int NUM_ITER_CRAWL=200;
+     
+     
+     
+     
 	public CrawlerUniversal() {
 	}
 
+	public static void setNumberIterationsCrawl(int crawl){
+		NUM_ITER_CRAWL=crawl;
+	}
+	
+	public static int getNumberIterCrawl(){
+		return NUM_ITER_CRAWL;
+	}
+	
 	public static void setDebugTrue(){
 		DEBUG=true;
 	}

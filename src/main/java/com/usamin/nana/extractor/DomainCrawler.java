@@ -173,7 +173,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 	 * duration
 	 */
 	private void timeout() {
-		System.err.print("start timeout: ");
+		//System.err.print("start timeout: ");
 		Instant currentTime = Instant.now();
 		System.err.println(Duration.between(currentTime, startNext));
 		if (startNext.isAfter(currentTime)) {
@@ -184,7 +184,7 @@ public class DomainCrawler extends CrawlerUniversal implements Comparable<Domain
 				e1.printStackTrace();
 			}
 		}
-		System.err.println("end timeout");
+	//	System.err.println("end timeout");
 
 	}
 

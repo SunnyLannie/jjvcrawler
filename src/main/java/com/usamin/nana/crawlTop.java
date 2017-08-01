@@ -1,7 +1,5 @@
 package com.usamin.nana;
 
-import java.awt.List;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -20,7 +18,6 @@ public class crawlTop extends CrawlerUniversal {
 	Set<String> discovered = ConcurrentHashMap.newKeySet(); // thread safe set
 	LinkedList<String> toCrawl;
 
-	long maxIteration = 2;
 	CrawlMap map;
 	int iteration = 0;
 	private Lock lock;
@@ -88,7 +85,7 @@ public class crawlTop extends CrawlerUniversal {
 									// going to be crawled
 			incrementIteration();
 			debugPrint("we found: " + discovered);
-		} while (getIteration() < maxIteration && areSameDomain(next, url)); // is
+		} while (getIteration() < getNumberIterCrawl() && areSameDomain(next, url)); // is
 																				// here
 																				// to
 																				// stop
