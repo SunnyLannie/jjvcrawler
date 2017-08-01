@@ -1,7 +1,10 @@
 package com.usamin.nana;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -103,6 +106,14 @@ public class crawlTop extends CrawlerUniversal {
 		//debugPrint("crawltop exclude crawl: "+excludeCrawl);
 		//System.out.println("we found: " + discovered);
 		//System.out.println("the number of items we found is: " + discovered.size());
+	}
+	
+	public LinkedHashSet<String> getFoundUrl(){
+		toCrawlLock.lock();
+		System.out.println(toCrawl);
+		LinkedHashSet<String> toCrawlNoDup =  new LinkedHashSet<String>(toCrawl);
+		toCrawlLock.unlock();
+		return toCrawlNoDup;
 	}
 	
 	public Set<String> getCrawledUrl(){

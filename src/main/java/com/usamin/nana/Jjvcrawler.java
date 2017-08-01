@@ -1,9 +1,12 @@
 package com.usamin.nana;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -83,7 +86,7 @@ public class Jjvcrawler extends CrawlerUniversal {
 		String facebook = "https://www.facebook.com";
 		// test="https://www.equestriadaily.com";
 		String test2 = "https://www.macrumors.com/";
-		 test="https://www.equestriadaily.com";
+		// test="https://www.equestriadaily.com";
 		// test= "https://sites.google.com/site/daviddeyellwatercolor/";
 
 		crawlTop top = new crawlTop(test); // crawl top is where the actual
@@ -123,11 +126,20 @@ public class Jjvcrawler extends CrawlerUniversal {
 		System.out.println(top.getCrawledUrl());
 		}else{//print to filename
 			try {
+				 File file = new File(filename);
+				 if (file.exists()){
+				     file.delete();
+				 }  
 			    PrintWriter pw = new PrintWriter(filename, "UTF-8");
 			    pw.println("List of url crawled");
 				for(String s:top.getCrawledUrl()){
 					pw.println(s);
 				}
+			    pw.println("List of url found");
+			    LinkedHashSet<String> hash=top.getFoundUrl();
+			    for(String s:hash){
+					pw.println(s);
+			    }
 				pw.close();
 			} catch (IOException e) {
 				//e.printStackTrace();
